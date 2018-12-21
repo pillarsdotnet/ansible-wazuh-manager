@@ -1,0 +1,37 @@
+---
+
+- name: 'Check agentless settings.'
+  include_tasks: 'check_agentless.yml'
+  loop: '{{ [wazuh_ossec_config.agentless|default([])]|flatten }}'
+  loop_control:
+    loop_var: 'wazuh_agentless'
+- name: 'Check auth settings.'
+  include_tasks: 'check_auth.yml'
+  loop: '{{ [wazuh_ossec_config.auth|default([])]|flatten }}'
+  loop_control:
+    loop_var: 'wazuh_auth_settings'
+- name: 'Check cluster settings.'
+  loop: '{{ [wazuh_ossec_config.cluster|default([])]|flatten }}'
+  set_fact:
+    wazuh_cluster_enabled: true
+  when: 'not item.disabled|default(false)'
+- name: 'Check global settings.'
+  include_tasks: 'check_global.yml'
+  loop: '{{ [wazuh_ossec_config.global|default([])]|flatten }}'
+  loop_control:
+    loop_var: 'wazuh_global_settings'
+- name: 'Check integration settings.'
+  set_fact:
+    wazuh_integration_enabled: true
+  when:
+    - '"integration" in wazuh_ossec_config'
+    - 'wazuh_ossec_config.integration|length>0'
+- name: 'Check syslog_output settings.'
+  set_fact:
+    wazuh_syslog_enabled: true
+  when: '"syslog_output" in wazuh_ossec_config'
+- name: 'Check wodle settings.'
+  include_tasks: 'check_wodle.yml'
+  loop: '{{ [wazuh_ossec_config.wodle|default([])]|flatten }}'
+  loop_control:
+    loop_var: 'wazuh_wodle_settings'

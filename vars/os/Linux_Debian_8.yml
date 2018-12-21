@@ -1,0 +1,10 @@
+---
+
+wazuh_cis_file_: '{{ wazuh_cis_file_debian }}'
+
+wazuh_manager_wodle_openscap_content_:
+  - +type: 'oval'
+    +path: 'cve-debian-8-oval.xml'
+  - +type: 'xccdf'
+    +path: 'ssg-debian-8-ds.xml'
+    profile: 'xccdf_org.ssgproject.content_profile_common'

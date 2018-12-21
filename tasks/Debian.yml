@@ -1,0 +1,208 @@
+---
+
+- block:
+    - name: 'Debian/Ubuntu | Install apt-transport-https and ca-certificates'
+      block:
+        - name: 'Debian/Ubuntu |
+                 Install apt-transport-https and ca-certificates (apt)'
+          apt:
+            cache_valid_time: 3600
+            name:
+              - 'apt-transport-https'
+              - 'ca-certificates'
+            state: 'present'
+          async: '{{ wazuh_async_timeout }}'
+          poll: 0
+          register: 'wazuh_manager_debian_1'
+        - name: 'Debian/Ubuntu |
+                 Install apt-transport-https and ca-certificates (async_status)'
+          async_status:
+            jid: '{{ wazuh_manager_debian_1.ansible_job_id }}'
+          register: 'wazuh_manager_debian_1_result'
+          retries: '{{ wazuh_async_tries }}'
+          until: 'wazuh_manager_debian_1_result is defined and
+                  wazuh_manager_debian_1_result.finished|default(false)'
+          when: 'wazuh_manager_debian_1 is defined and not (
+                 wazuh_manager_debian_1.finished|default(false) or
+                 wazuh_manager_debian_1.ansible_job_id is not defined)'
+    - name: 'Debian/Ubuntu | Installing Wazuh repository key'
+      block:
+        - name: 'Debian/Ubuntu | Installing Wazuh repository key (apt_key)'
+          apt_key:
+            url: '{{ wazuh_repo_key }}'
+          async: '{{ wazuh_async_timeout }}'
+          poll: 0
+          register: 'wazuh_manager_debian_2'
+        - name: 'Debian/Ubuntu | Installing Wazuh repository key (async_status)'
+          async_status:
+            jid: '{{ wazuh_manager_debian_2.ansible_job_id }}'
+          register: 'wazuh_manager_debian_2_result'
+          retries: '{{ wazuh_async_tries }}'
+          until: 'wazuh_manager_debian_2_result is defined and
+                  wazuh_manager_debian_2_result.finished|default(false)'
+          when: 'wazuh_manager_debian_2 is defined and not (
+                 wazuh_manager_debian_2.finished|default(false) or
+                 wazuh_manager_debian_2.ansible_job_id is not defined)'
+      when: 'wazuh_repo_add'
+    - name: 'Debian/Ubuntu | Add Wazuh repositories'
+      block:
+        - name: 'Debian/Ubuntu | Add Wazuh repositories (apt_repository)'
+          apt_repository:
+            repo: '{{ wazuh_repo }}'
+            state: 'present'
+            update_cache: true
+          async: '{{ wazuh_async_timeout }}'
+          poll: 0
+          register: 'wazuh_manager_debian_3'
+        - name: 'Debian/Ubuntu | Add Wazuh repositories (async_status)'
+          async_status:
+            jid: '{{ wazuh_manager_debian_3.ansible_job_id }}'
+          register: 'wazuh_manager_debian_3_result'
+          retries: '{{ wazuh_async_tries }}'
+          until: 'wazuh_manager_debian_3_result is defined and
+                  wazuh_manager_debian_3_result.finished|default(false)'
+          when: 'wazuh_manager_debian_3 is defined and not (
+                 wazuh_manager_debian_3.finished|default(false) or
+                 wazuh_manager_debian_3.ansible_job_id is not defined)'
+      when: 'wazuh_repo_add'
+    - name: 'Debian/Ubuntu | Installing NodeJS repository key'
+      block:
+        - name: 'Debian/Ubuntu | Installing NodeJS repository key (apt_key)'
+          apt_key:
+            url: '{{ nodejs_repo_key }}'
+          async: '{{ wazuh_async_timeout }}'
+          poll: 0
+          register: 'wazuh_manager_debian_4'
+        - name: 'Debian/Ubuntu |
+                 Installing NodeJS repository key (async_status)'
+          async_status:
+            jid: '{{ wazuh_manager_debian_4.ansible_job_id }}'
+          register: 'wazuh_manager_debian_4_result'
+          retries: '{{ wazuh_async_tries }}'
+          until: 'wazuh_manager_debian_4_result is defined and
+                  wazuh_manager_debian_4_result.finished|default(false)'
+          when: 'wazuh_manager_debian_4 is defined and not (
+                 wazuh_manager_debian_4.finished|default(false) or
+                 wazuh_manager_debian_4.ansible_job_id is not defined)'
+      when: 'nodejs_repo_add'
+    - name: 'Debian/Ubuntu | Add NodeSource repositories for Node.js'
+      block:
+        - name: 'Debian/Ubuntu |
+                 Add NodeSource repositories for Node.js (apt_repository)'
+          apt_repository:
+            repo: '{{ nodejs_repo }}'
+            state: 'present'
+            update_cache: true
+          async: '{{ wazuh_async_timeout }}'
+          poll: 0
+          register: 'wazuh_manager_debian_5'
+        - name: 'Debian/Ubuntu |
+                 Add NodeSource repositories for Node.js (async_status)'
+          async_status:
+            jid: '{{ wazuh_manager_debian_5.ansible_job_id }}'
+          register: 'wazuh_manager_debian_5_result'
+          retries: '{{ wazuh_async_tries }}'
+          until: 'wazuh_manager_debian_5_result is defined and
+                  wazuh_manager_debian_5_result.finished|default(false)'
+          when: 'wazuh_manager_debian_5 is defined and not (
+                 wazuh_manager_debian_5.finished|default(false) or
+                 wazuh_manager_debian_5.ansible_job_id is not defined)'
+      when: 'nodejs_repo_add'
+
+- block:
+    - name: 'Debian/Ubuntu | Setting webupd8 repository'
+      block:
+        - name: 'Debian/Ubuntu | Setting webupd8 repository (apt_repository)'
+          apt_repository:
+            repo: 'ppa:webupd8team/java'
+            codename: 'xenial'
+            update_cache: true
+          async: '{{ wazuh_async_timeout }}'
+          poll: 0
+          register: 'wazuh_manager_debian_6'
+        - name: 'Debian/Ubuntu | Setting webupd8 repository (async_status)'
+          async_status:
+            jid: '{{ wazuh_manager_debian_6.ansible_job_id }}'
+          register: 'wazuh_manager_debian_6_result'
+          retries: '{{ wazuh_async_tries }}'
+          until: 'wazuh_manager_debian_6_result is defined and
+                  wazuh_manager_debian_6_result.finished|default(false)'
+          when: 'wazuh_manager_debian_6 is defined and not (
+                 wazuh_manager_debian_6.finished|default(false) or
+                 wazuh_manager_debian_6.ansible_job_id is not defined)'
+      tags:
+        - 'init'
+      when: 'wazuh_repo_add'
+    - name: 'Debian/Ubuntu | Accept Oracle Java 8 license'
+      debconf:
+        name: 'oracle-java8-installer'
+        question: 'shared/accepted-oracle-license-v1-1'
+        value: true
+        vtype: 'boolean'
+      tags:
+        - 'init'
+    - name: 'Debian/Ubuntu | Oracle Java 8 installer'
+      block:
+        - name: 'Debian/Ubuntu | Oracle Java 8 installer (apt)'
+          apt:
+            name: 'oracle-java8-installer'
+            state: 'present'
+            cache_valid_time: 3600
+          async: '{{ wazuh_async_timeout }}'
+          poll: 0
+          register: 'wazuh_manager_debian_7'
+        - name: 'Debian/Ubuntu | Oracle Java 8 installer (async_status)'
+          async_status:
+            jid: '{{ wazuh_manager_debian_7.ansible_job_id }}'
+          register: 'wazuh_manager_debian_7_result'
+          retries: '{{ wazuh_async_tries }}'
+          until: 'wazuh_manager_debian_7_result is defined and
+                  wazuh_manager_debian_7_result.finished|default(false)'
+          when: 'wazuh_manager_debian_7 is defined and not (
+                 wazuh_manager_debian_7.finished|default(false) or
+                 wazuh_manager_debian_7.ansible_job_id is not defined)'
+      tags:
+        - 'init'
+  when:
+    - 'wazuh_ciscat_enabled|default(false)'
+    - 'wazuh_java_install'
+
+- block:
+    - name: 'Debian/Ubuntu | Install OpenScap'
+      block:
+        - name: 'Debian/Ubuntu | Install OpenScap (package)'
+          package:
+            name:
+              - 'libopenscap8'
+              - 'xsltproc'
+            state: 'present'
+            cache_valid_time: 3600
+          async: '{{ wazuh_async_timeout }}'
+          poll: 0
+          register: 'wazuh_manager_debian_8'
+        - name: 'Debian/Ubuntu | Install OpenScap (async_status)'
+          async_status:
+            jid: '{{ wazuh_manager_debian_8.ansible_job_id }}'
+          register: 'wazuh_manager_debian_8_result'
+          retries: '{{ wazuh_async_tries }}'
+          until: 'wazuh_manager_debian_8_result is defined and
+                  wazuh_manager_debian_8_result.finished|default(false)'
+          when: 'wazuh_manager_debian_8 is defined and not (
+                 wazuh_manager_debian_8.finished|default(false) or
+                 wazuh_manager_debian_8.ansible_job_id is not defined)'
+      tags:
+        - 'init'
+    - name: 'Debian/Ubuntu | Get OpenScap installed version'
+      changed_when: true
+      register: 'openscap_version'
+      shell: "dpkg-query --showformat='${Version}' --show libopenscap8"
+      tags:
+        - 'config'
+    - name: 'Debian/Ubuntu | Check OpenScap version'
+      changed_when: true
+      register: 'openscap_version_valid'
+      shell: 'dpkg --compare-versions "{{ openscap_version.stdout }}"
+              ">=" "1.2"; echo $?'
+      tags:
+        - 'config'
+  when: 'wazuh_openscap_enabled|default(false)'

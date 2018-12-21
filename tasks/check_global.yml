@@ -1,0 +1,10 @@
+---
+
+- name: 'Check global.alerts_log setting.'
+  set_fact:
+    wazuh_alerts_log_enabled: false
+  when: 'not wazuh_global_settings.alerts_log|default(true)'
+- name: 'Check global.jsonout_output setting.'
+  set_fact:
+    wazuh_jsonout_output_enabled: true
+  when: 'wazuh_global_settings.jsonout_output|default(false)'

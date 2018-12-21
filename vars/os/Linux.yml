@@ -1,0 +1,7 @@
+---
+
+wazuh_wodle_ciscat_ciscatpath_: '/var/ossec/wodles/ciscat'
+
+wazuh_manager_wodle_command_vuls_command_: '/usr/bin/python
+  /var/ossec/wodles/vuls/vuls.py
+ {{ wazuh_manager_wodle_command_vuls_command_args|join(" ") }}'

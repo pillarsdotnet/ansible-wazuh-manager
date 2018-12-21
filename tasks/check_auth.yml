@@ -1,0 +1,18 @@
+---
+
+- name: 'Check auth.enabled setting.'
+  set_fact:
+    wazuh_auth_enabled: true
+  when: 'not wazuh_auth_settings.disabled|default(false)'
+- name: 'Check auth.ssl_agent_ca setting.'
+  set_fact:
+    wazuh_ssl_ca: '{{ wazuh_auth_settings.ssl_agent_ca }}'
+  when: '"ssl_agent_ca" in wazuh_auth_settings'
+- name: 'Check auth.ssl_manager_cert setting.'
+  set_fact:
+    wazuh_ssl_cert: '{{ wazuh_auth_settings.ssl_manager_cert }}'
+  when: '"ssl_manager_cert" in wazuh_auth_settings'
+- name: 'Check auth.ssl_manager_key setting.'
+  set_fact:
+    wazuh_ssl_key: '{{ wazuh_auth_settings.ssl_manager_key }}'
+  when: '"ssl_manager_key" in wazuh_auth_settings'

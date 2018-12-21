@@ -1,0 +1,18 @@
+---
+
+wazuh_cis_file_:
+  - '{{ wazuh_cis_file_rhel5 }}'
+  - '{{ wazuh_cis_file_rhel6 }}'
+  - '{{ wazuh_cis_file_rhel7 }}'
+
+nodejs_repo: 'https://rpm.nodesource.com/pub_6.x/fc/$releasever/x86_64'
+
+nodejs_repo_key: "https://rpm.nodesource.com/pub/el/\
+                  NODESOURCE-GPG-SIGNING-KEY-EL"
+
+wazuh_manager_wodle_openscap_content_:
+  +type: 'xccdf'
+  +path: 'ssg-fedora-ds.xml'
+  profile:
+    - 'xccdf_org.ssgproject.content_profile_common'
+    - 'xccdf_org.ssgproject.content_profile_pci-dss'

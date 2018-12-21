@@ -1,0 +1,7 @@
+---
+
+wazuh_cis_file_: '{{ wazuh_cis_file_debian }}'
+
+wazuh_manager_wodle_openscap_content_:
+  +type: 'oval'
+  +path: 'cve-debian-9-oval.xml'

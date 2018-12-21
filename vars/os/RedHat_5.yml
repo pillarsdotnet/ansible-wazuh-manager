@@ -1,0 +1,11 @@
+---
+
+wazuh_api_install: false
+
+wazuh_api_packages: []
+
+wazuh_cis_file_: '{{ wazuh_cis_file_rhel5 }}'
+
+wazuh_repo: 'https://packages.wazuh.com/3.x/yum/5/'
+
+wazuh_repo_key: 'https://packages.wazuh.com/key/GPG-KEY-WAZUH'

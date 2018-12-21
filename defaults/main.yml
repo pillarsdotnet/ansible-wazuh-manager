@@ -1,0 +1,1560 @@
+---
+
+nodejs_repo_add: true
+
+nodejs_repo_remove: true
+
+wazuh_agentless_hosts:
+  cisco@example.com:            # Routers may require an additional password.
+    - 'password'
+    - 'enablepass'
+  root@example.com: 'NOPASS'    # Example using pubkey authentication.
+  user@example.com: 'password'  # Example using user/password authentication.
+
+wazuh_api_install: true
+
+wazuh_api_users:  # user "foo" has password "bar"
+  foo: 'bar'
+
+wazuh_async_timeout: 1000
+
+wazuh_async_tries: 30
+
+wazuh_authd_pass: null  # Change to enable password-auth for registration.
+
+wazuh_cdb_lists: '{{ wazuh_cdb_lists_audit|combine(wazuh_cdb_lists_custom|default({})) }}'
+
+wazuh_cdb_lists_audit:
+  audit-keys: |
+    audit-wazuh-a:attribute
+    audit-wazuh-c:command
+    audit-wazuh-r:read
+    audit-wazuh-w:write
+    audit-wazuh-x:execute
+
+wazuh_cis_file: '{{ wazuh_cis_file_ }}'
+
+wazuh_cis_file_: null  # Overwritten by vars/os/ files.
+
+wazuh_cis_file_debian: 'cis_debian_linux_rcl.txt'
+
+wazuh_cis_file_rhel5: 'cis_rhel5_linux_rcl.txt'
+
+wazuh_cis_file_rhel6: 'cis_rhel6_linux_rcl.txt'
+
+wazuh_cis_file_rhel7: 'cis_rhel7_linux_rcl.txt'
+
+wazuh_compiled_rules: '{{
+  wazuh_compiled_rules_custom|union(wazuh_compiled_rules_default) }}'
+
+wazuh_compiled_rules_custom: []
+
+wazuh_compiled_rules_default:
+  - 'check_id_size'
+  - 'comp_mswin_targetuser_calleruser_diff'
+  - 'comp_srcuser_dstuser'
+  - 'is_simple_http_request'
+  - 'is_valid_crawler'
+
+wazuh_decoder:
+  decoder:
+    +name: 'local_decoder_example'
+    program_name: 'local_decoder_example'
+
+wazuh_manager:
+  ossec_config:
+    - command: '{{ wazuh_manager_command }}'
+    - active-response: '{{ wazuh_manager_activeresponse }}'
+      alerts: '{{ wazuh_manager_alerts }}'
+      auth: '{{ wazuh_manager_auth }}'
+      cluster: '{{ wazuh_manager_cluster }}'
+      command: '{{ wazuh_manager_command }}'
+      database_output: '{{ wazuh_manager_databaseoutput }}'
+      email_alerts: '{{ wazuh_manager_emailalerts }}'
+      global: '{{ wazuh_manager_global }}'
+      integration: '{{ wazuh_manager_integration }}'
+      labels: '{{ wazuh_manager_labels }}'
+      localfile: '{{ wazuh_manager_localfile }}'
+      logging:
+        log_format: '{{ wazuh_manager_logformat }}'
+      remote: '{{ wazuh_manager_remote }}'
+      reports: '{{ wazuh_manager_reports }}'
+      rootcheck: '{{ wazuh_manager_rootcheck }}'
+      ruleset: '{{ wazuh_manager_ruleset }}'
+      syscheck: '{{ wazuh_manager_syscheck }}'
+    - '{{ (wazuh_manager_syslogoutput_server is none)
+          |ternary(none, {"syslog_output": wazuh_manager_syslogoutput}) }}'
+    - wodle: '{{ wazuh_manager_wodle }}'
+
+wazuh_manager_activeresponse:
+  - disabled: '{{ wazuh_manager_activeresponse_disabled }}'
+  - '{{ wazuh_manager_activeresponse_hostdeny }}'
+  - '{{ wazuh_manager_activeresponse_restartossec }}'
+  - '{{ wazuh_manager_activeresponse_winrestartossec }}'
+
+wazuh_manager_activeresponse_disabled: false
+
+wazuh_manager_activeresponse_hostdeny:
+  command: 'host-deny'
+  location: 'local'
+  level: 6
+  timeout: 600
+
+wazuh_manager_activeresponse_restartossec:
+  command: 'restart-ossec'
+  location: 'local'
+  rules_id: 100002
+
+wazuh_manager_activeresponse_winrestartossec:
+  command: 'win_restart-ossec'
+  location: 'local'
+  rules_id: 100003
+
+wazuh_manager_alerts:
+  email_alert_level: '{{ wazuh_manager_alerts_emailalertlevel }}'
+  log_alert_level: '{{ wazuh_manager_alerts_logalertlevel }}'
+
+wazuh_manager_alerts_emailalertlevel: 12
+
+wazuh_manager_alerts_logalertlevel: 3
+
+wazuh_manager_auth:
+  disabled: '{{ wazuh_manager_auth_disabled }}'
+  force_insert: '{{ wazuh_manager_auth_forceinsert }}'
+  force_time: '{{ wazuh_manager_auth_forcetime }}'
+  limit_maxagents: '{{ wazuh_manager_auth_limitmaxagents }}'
+  port: '{{ wazuh_manager_auth_port }}'
+  purge: '{{ wazuh_manager_auth_purge }}'
+  use_password: '{{ wazuh_manager_auth_usepassword }}'
+  use_source_ip: '{{ wazuh_manager_auth_usesourceip }}'
+
+wazuh_manager_auth_disabled: true
+
+wazuh_manager_auth_forceinsert: true
+
+wazuh_manager_auth_forcetime: 0
+
+wazuh_manager_auth_limitmaxagents: true
+
+wazuh_manager_auth_port: 1515
+
+wazuh_manager_auth_purge: false
+
+wazuh_manager_auth_usepassword: '{{ wazuh_authd_pass is string and
+                                   wazuh_authd_pass|length>0 }}'
+
+wazuh_manager_auth_usesourceip: false
+
+wazuh_manager_cluster:
+  bind_addr: '{{ wazuh_manager_cluster_bindaddr }}'
+  disabled: '{{ wazuh_manager_cluster_disabled }}'
+  hidden: '{{ wazuh_manager_cluster_hidden }}'
+  interval: '{{ wazuh_manager_cluster_interval }}'
+  key: '{{ wazuh_manager_cluster_key }}'
+  name: '{{ wazuh_manager_cluster_name }}'
+  node_name: '{{ wazuh_manager_cluster_nodename }}'
+  node_type: '{{ wazuh_manager_cluster_nodetype }}'
+  nodes:
+    node: '{{ wazuh_manager_cluster_nodesnode }}'
+  port: '{{ wazuh_manager_cluster_port }}'
+
+wazuh_manager_cluster_bindaddr: '0.0.0.0'
+
+wazuh_manager_cluster_disabled: true
+
+wazuh_manager_cluster_hidden: false
+
+wazuh_manager_cluster_interval: '2m'
+
+wazuh_manager_cluster_key: '1234567890123456789012'
+
+wazuh_manager_cluster_name: 'wazuh'
+
+wazuh_manager_cluster_nodename: 'manager_01'
+
+wazuh_manager_cluster_nodetype: 'master'
+
+wazuh_manager_cluster_nodesnode: '127.0.0.1'
+
+wazuh_manager_cluster_port: 1516
+
+wazuh_manager_command:
+  - '{{ wazuh_manager_command_disableaccount }}'
+  - '{{ wazuh_manager_command_firewalldrop }}'
+  - '{{ wazuh_manager_command_hostdeny }}'
+  - '{{ wazuh_manager_command_restartossec }}'
+  - '{{ wazuh_manager_command_routenull }}'
+  - '{{ wazuh_manager_command_winrestartossec }}'
+  - '{{ wazuh_manager_command_winroutenull }}'
+
+wazuh_manager_command_disableaccount:
+  name: 'disable-account'
+  executable: 'disable-account.sh'
+  expect: 'user'
+  timeout_allowed: true
+
+wazuh_manager_command_firewalldrop:
+  name: 'firewall-drop'
+  executable: 'firewall-drop.sh'
+  expect: 'srcip'
+  timeout_allowed: true
+
+wazuh_manager_command_hostdeny:
+  name: 'host-deny'
+  executable: 'host-deny.sh'
+  expect: 'srcip'
+  timeout_allowed: true
+
+wazuh_manager_command_restartossec:
+  name: 'restart-ossec'
+  executable: 'restart-ossec.sh'
+  timeout_allowed: false
+
+wazuh_manager_command_winrestartossec:
+  name: 'win_restart-ossec'
+  executable: 'restart-ossec.cmd'
+  timeout_allowed: false
+
+wazuh_manager_command_routenull:
+  name: 'route-null'
+  executable: 'route-null.sh'
+  expect: 'srcip'
+  timeout_allowed: true
+
+wazuh_manager_command_winroutenull:
+  name: 'win_route-null'
+  executable: 'route-null.cmd'
+  expect: 'srcip'
+  timeout_allowed: true
+
+wazuh_manager_databaseoutput: '{{
+  (wazuh_manager_databaseoutput_password is none)
+  |ternary(none,wazuh_manager_databaseoutput_) }}'
+
+wazuh_manager_databaseoutput_:
+  database: '{{ wazuh_manager_databaseoutput_database }}'
+  hostname: '{{ wazuh_manager_databaseoutput_hostname }}'
+  password: '{{ wazuh_manager_databaseoutput_password }}'
+  type: '{{ wazuh_manager_databaseoutput_type }}'
+  username: '{{ wazuh_manager_databaseoutput_username }}'
+
+wazuh_manager_databaseoutput_database: 'wazuh'
+
+wazuh_manager_databaseoutput_hostname: 'localhost'
+
+wazuh_manager_databaseoutput_password: null
+
+wazuh_manager_databaseoutput_type: 'mysql'
+
+wazuh_manager_databaseoutput_username: 'wazuh'
+
+wazuh_manager_emailalerts: '{{
+  (wazuh_manager_emailalerts_emailto is none)
+  |ternary(none, wazuh_manager_emailalerts_)) }}'
+
+wazuh_manager_emailalerts_: '{{
+  wazuh_manager_emailalerts_optional
+  |join(wazuh_manager_emailalerts_required) }}'
+
+wazuh_manager_emailalerts_donotdelay: false
+
+wazuh_manager_emailalerts_donotdelay_: '{{
+  wazuh_manager_emailalerts_donotdelay
+  |ternary({}, {"do_not_delay": null}) }}'
+
+wazuh_manager_emailalerts_donotgroup: false
+
+wazuh_manager_emailalerts_donotgroup_: '{{
+  wazuh_manager_emailalerts_donotgroup
+  |ternary({}, {"do_not_group": null}) }}'
+
+wazuh_manager_emailalerts_emailto: null
+
+wazuh_manager_emailalerts_eventlocation: null
+
+wazuh_manager_emailalerts_eventlocation_: '{{
+  (wazuh_manager_emailalerts_eventlocation is none)
+  |ternary({}, {"event_location": wazuh_manager_emailalerts_eventlocation} }}'
+
+wazuh_manager_emailalerts_format: 'default'
+
+wazuh_manager_emailalerts_group: null
+
+wazuh_manager_emailalerts_group_: '{{
+  (wazuh_manager_emailalerts_group is none)
+  |ternary({}, {"group": wazuh_manager_emailalerts_group} }}'
+
+wazuh_manager_emailalerts_level: 2
+
+wazuh_manager_emailalerts_optional: '{{
+  wazuh_manager_emailalerts_donotdelay_
+  |join(wazuh_manager_emailalerts_donotgroup_)
+  |join(wazuh_manager_emailalerts_eventlocation_)
+  |join(wazuh_manager_emailalerts_group_)
+  |join(wazuh_manager_emailalerts_ruleid_) }}'
+
+
+wazuh_manager_emailalerts_required:
+  email_to: '{{ wazuh_manager_emailalerts_emailto }}'
+  format: '{{ wazuh_manager_emailalerts_format }}'
+  level: '{{ wazuh_manager_emailalerts_level }}'
+
+wazuh_manager_emailalerts_ruleid: null
+
+wazuh_manager_emailalerts_ruleid_: '{{
+  (wazuh_manager_emailalerts_ruleid is none)
+  |ternary({}, {"rule_id": wazuh_manager_emailalerts_ruleid}) }}'
+
+wazuh_manager_global:
+  alerts_log: '{{ wazuh_manager_global_alertslog }}'
+  email_from: '{{ wazuh_manager_global_emailfrom }}'
+  email_maxperhour: '{{ wazuh_manager_global_emailmaxperhour }}'
+  email_notification: '{{ wazuh_manager_global_emailnotification }}'
+  email_reply_to: '{{ wazuh_manager_global_emailreplyto }}'
+  email_to: '{{ wazuh_manager_global_emailto }}'
+  helo_server: '{{ wazuh_manager_global_heloserver }}'
+  host_information: '{{ wazuh_manager_global_hostinformation }}'
+  integrity_checking: '{{ wazuh_manager_global_integritychecking }}'
+  jsonout_output: '{{ wazuh_manager_global_jsonoutoutput }}'
+  logall: '{{ wazuh_manager_global_logall }}'
+  logall_json: '{{ wazuh_manager_global_logalljson }}'
+  max_output_size: '{{ wazuh_manager_global_maxoutputsize }}'
+  memory_size: '{{ wazuh_manager_global_memorysize }}'
+  prelude_log_level: '{{ wazuh_manager_global_preludeloglevel }}'
+  prelude_output: '{{ wazuh_manager_global_preludeoutput }}'
+  queue_size: '{{ wazuh_manager_global_queuesize }}'
+  rootkit_detection: '{{ wazuh_manager_global_rootkitdetection }}'
+  rotate_interval: '{{ wazauh_rotateinterval }}'
+  smtp_server: '{{ wazuh_manager_global_smtpserver }}'
+  stats: '{{ wazuh_manager_global_stats }}'
+  white_list: '{{ wazuh_manager_global_whitelist }}'
+
+wazuh_manager_global_alertslog: true
+
+wazuh_manager_global_emailfrom: 'wazuh-server@example.com'
+
+wazuh_manager_global_emailmaxperhour: 12
+
+wazuh_manager_global_emailnotification: false
+
+wazuh_manager_global_emailreplyto: 'admin@example.com'
+
+wazuh_manager_global_emailto: 'admin@example.com'
+
+wazuh_manager_global_heloserver: 'notify.ossec.net'
+
+wazuh_manager_global_hostinformation: 8
+
+wazuh_manager_global_integritychecking: 8
+
+wazuh_manager_global_jsonoutoutput: true
+
+wazuh_manager_global_logall: false
+
+wazuh_manager_global_logalljson: false
+
+wazuh_manager_global_maxoutputsize: 0
+
+wazuh_manager_global_memorysize: 8192
+
+wazuh_manager_global_preludeloglevel: 0
+
+wazuh_manager_global_preludeoutput: false
+
+wazuh_manager_global_queuesize: 131072
+
+wazuh_manager_global_rootkitdetection: 8
+
+wazuh_manager_global_rotateinterval: '1d'
+
+wazuh_manager_global_smtpserver: '127.0.0.1'
+
+wazuh_manager_global_stats: 4
+
+wazuh_manager_global_whitelist:
+  - '127.0.0.1'
+
+wazuh_manager_integration: '{{ wazuh_manager_integration_list
+                                      |selectattr("enabled")|list }}'
+
+wazuh_manager_integration_list:
+  - '{{ wazuh_manager_integration_pagerduty }}'
+  - '{{ wazuh_manager_integration_slack }}'
+  - '{{ wazuh_manager_integration_virustotal }}'
+
+wazuh_manager_integration_pagerduty:
+  name: 'pagerduty'
+  alert_format: '{{ wazuh_manager_integration_pagerduty_alertformat }}'
+  api_key: '{{ wazuh_manager_integration_pagerduty_apikey }}'
+  enabled: '{{ wazuh_manager_integration_pagerduty_enabled }}'
+  event_location: '{{ wazuh_manager_integration_pagerduty_eventlocation }}'
+  group: '{{ wazuh_manager_integration_pagerduty_group }}'
+  level: '{{ wazuh_manager_integration_pagerduty_level }}'
+  max_log: '{{ wazuh_manager_integration_pagerduty_maxlog }}'
+  rule_id: '{{ wazuh_manager_integration_pagerduty_ruleid }}'
+
+wazuh_manager_integration_pagerduty_alertformat: 'json'
+
+wazuh_manager_integration_pagerduty_apikey: null
+
+wazuh_manager_integration_pagerduty_enabled: false
+
+wazuh_manager_integration_pagerduty_eventlocation: null
+
+wazuh_manager_integration_pagerduty_group: null
+
+wazuh_manager_integration_pagerduty_level: 12
+
+wazuh_manager_integration_pagerduty_maxlog: 165
+
+wazuh_manager_integration_pagerduty_ruleid: null
+
+wazuh_manager_integration_slack:
+  name: 'slack'
+  alert_format: '{{ wazuh_manager_integration_slack_alertformat }}'
+  enabled: '{{ wazuh_manager_integration_slack_enabled }}'
+  event_location: '{{ wazuh_manager_integration_slack_eventlocation }}'
+  group: '{{ wazuh_manager_integration_slack_group }}'
+  hook_url: '{{ wazuh_manager_integration_slack_hookurl }}'
+  level: '{{ wazuh_manager_integration_slack_level }}'
+  max_log: '{{ wazuh_manager_integration_slack_maxlog }}'
+  rule_id: '{{ wazuh_manager_integration_slack_ruleid }}'
+
+wazuh_manager_integration_slack_alertformat: 'json'
+
+wazuh_manager_integration_slack_enabled: false
+
+wazuh_manager_integration_slack_eventlocation: null
+
+wazuh_manager_integration_slack_group: null
+
+wazuh_manager_integration_slack_hookurl: null
+
+wazuh_manager_integration_slack_level: 12
+
+wazuh_manager_integration_slack_maxlog: 165
+
+wazuh_manager_integration_slack_ruleid: null
+
+wazuh_manager_integration_virustotal:
+  name: 'virustotal'
+  alert_format: '{{ wazuh_manager_integration_virustotal_alertformat }}'
+  api_key: '{{ wazuh_manager_integration_virustotal_api_key }}'
+  enabled: '{{ wazuh_manager_integration_virustotal_enabled }}'
+  event_location: '{{ wazuh_manager_integration_virustotal_eventlocation }}'
+  group: '{{ wazuh_manager_integration_virustotal_group }}'
+  level: '{{ wazuh_manager_integration_virustotal_level }}'
+  max_log: '{{ wazuh_manager_integration_virustotal_maxlog }}'
+  rule_id: '{{ wazuh_manager_integration_virustotal_ruleid }}'
+
+wazuh_manager_integration_virustotal_alertformat: 'json'
+
+wazuh_manager_integration_virustotal_api_key: null
+
+wazuh_manager_integration_virustotal_enabled: false
+
+wazuh_manager_integration_virustotal_eventlocation: null
+
+wazuh_manager_integration_virustotal_group: null
+
+wazuh_manager_integration_virustotal_level: 12
+
+wazuh_manager_integration_virustotal_maxlog: 165
+
+wazuh_manager_integration_virustotal_ruleid: null
+
+wazuh_manager_labels: null  # See https://bit.ly/2pZ9L4U
+
+wazuh_manager_localfile: '{{ wazuh_manager_localfile_command
+                      |union(wazuh_manager_localfile_syslog)|flatten|list }}'
+
+wazuh_manager_localfile_command:
+  - '{{ wazuh_manager_localfile_command_custom }}'
+  - '{{ wazuh_manager_localfile_command_df }}'
+  - '{{ wazuh_manager_localfile_command_last }}'
+  - '{{ wazuh_manager_localfile_command_netstat }}'
+
+wazuh_manager_localfile_command_custom: []
+
+wazuh_manager_localfile_command_df:
+  command: '{{ wazuh_manager_localfile_command_df_command }}'
+  frequency: '{{ wazuh_manager_localfile_command_df_frequency }}'
+  log_format: 'command'
+
+wazuh_manager_localfile_command_df_command: 'df -P'
+
+wazuh_manager_localfile_command_df_frequency: 360
+
+wazuh_manager_localfile_command_last:
+  command: '{{ wazuh_manager_localfile_command_last_command }}'
+  frequency: '360'
+  log_format: 'full_command'
+
+wazuh_manager_localfile_command_last_command: 'last -n 20'
+
+wazuh_manager_localfile_command_last_frequency: 360
+
+wazuh_manager_localfile_command_netstat:
+  alias: 'netstat listening ports'
+  command: '{{ wazuh_manager_localfile_command_netstat_command }}'
+  frequency: '{{ wazuh_manager_localfile_command_netstat_frequency }}'
+  log_format: 'full_command'
+
+wazuh_manager_localfile_command_netstat_command: >-
+  netstat -tulpn
+  | sed 's/\([[:alnum:]]\+\)\ \+[[:digit:]]\+\ \+[[:digit:]]\+\
+  \+\(.*\):\([[:digit:]]*\)\ \+\([0-9\.\:\*]\+\).\+\
+  \([[:digit:]]*\/[[:alnum:]\-]*\)\.*/\1 \2 == \3 == \4 \5/'
+  | sort -k 4 -g | sed 's/ == \(.*\) ==/:\1/' | sed 1,2d
+
+wazuh_manager_localfile_command_netstat_frequency: 360
+
+wazuh_manager_localfile_syslog:
+  - '{{ wazuh_manager_localfile_syslog_messages }}'
+  - '{{ wazuh_manager_localfile_syslog_secure }}'
+
+wazuh_manager_localfile_syslog_messages:
+  log_format: 'syslog'
+  location: '{{ wazuh_manager_localfile_syslog_messages_location }}'
+
+wazuh_manager_localfile_syslog_messages_location: '/var/log/messages'
+
+wazuh_manager_localfile_syslog_secure:
+  log_format: 'syslog'
+  location: '{{ wazuh_manager_localfile_syslog_secure_location }}'
+
+wazuh_manager_localfile_syslog_secure_location: '/var/log/secure'
+
+wazuh_manager_logformat: 'plain'
+
+wazuh_manager_remote:
+  allowed-ips: '{{ wazuh_manager_remote_allowedips }}'
+  connection: '{{ wazuh_manager_remote_connection }}'
+  denied-ips: '{{ wazuh_manager_remote_deniedips }}'
+  ipv6: '{{ wazuh_manager_remote_ipv6 }}'
+  local_ip: '{{ wazuh_manager_remote_localip }}'
+  port: '{{ wazuh_manager_remote_port }}'
+  protocol: '{{ wazuh_manager_remote_protocol }}'
+  queue_size: '{{ wazuh_manager_remote_queuesize }}'
+
+wazuh_manager_remote_allowedips: '0.0.0.0/0'
+
+wazuh_manager_remote_connection: 'secure'
+
+wazuh_manager_remote_deniedips: null
+
+wazuh_manager_remote_ipv6: false
+
+wazuh_manager_remote_localip: null
+
+wazuh_manager_remote_port: '{{ (wazuh_manager_remote_connection=="syslog")
+                              |ternary(514,1514) }}'
+
+wazuh_manager_remote_protocol: 'udp'
+
+wazuh_manager_remote_queuesize: 16384
+
+wazuh_manager_reports: '{{ wazuh_manager_reports_list
+                                  |selectattr("enabled")|list }}'
+
+wazuh_manager_reports_list:
+  - '{{ wazuh_manager_reports_syscheck }}'
+
+wazuh_manager_reports_syscheck:
+  category: '{{ wazuh_manager_reports_syscheck_category }}'
+  email_to: '{{ wazuh_manager_reports_syscheck_emailto }}'
+  enabled: '{{ wazuh_manager_reports_syscheck_enabled }}'
+  group: '{{ wazuh_manager_reports_syscheck_group }}'
+  level: '{{ wazuh_manager_reports_syscheck_level }}'
+  location: '{{ wazuh_manager_reports_syscheck_location }}'
+  rule: '{{ wazuh_manager_reports_syscheck_rule }}'
+  showlogs: '{{ wazuh_manager_reports_syscheck_showlogs }}'
+  srcip: '{{ wazuh_manager_reports_syscheck_srcip }}'
+  title: '{{ wazuh_manager_reports_syscheck_title }}'
+  user: '{{ wazuh_manager_reports_syscheck_user }}'
+
+wazuh_manager_reports_syscheck_category: 'syscheck'
+
+wazuh_manager_reports_syscheck_emailto: '{{
+  wazuh_manager_global_emailto }}'
+
+wazuh_manager_reports_syscheck_enabled: false
+
+wazuh_manager_reports_syscheck_group: null
+
+wazuh_manager_reports_syscheck_level: 1
+
+wazuh_manager_reports_syscheck_location: null
+
+wazuh_manager_reports_syscheck_rule: null
+
+wazuh_manager_reports_syscheck_showlogs: false
+
+wazuh_manager_reports_syscheck_srcip: null
+
+wazuh_manager_reports_syscheck_title: 'Daily report: File changes'
+
+wazuh_manager_reports_syscheck_user: null
+
+wazuh_manager_rootcheck:
+  base_directory: '{{ wazuh_manager_rootcheck_basedirectory }}'
+  check_dev: '{{ wazuh_manager_rootcheck_checkdev }}'
+  check_files: '{{ wazuh_manager_rootcheck_checkfiles }}'
+  check_if: '{{ wazuh_manager_rootcheck_checkif }}'
+  check_pids: '{{ wazuh_manager_rootcheck_checkpids }}'
+  check_ports: '{{ wazuh_manager_rootcheck_checkports }}'
+  check_sys: '{{ wazuh_manager_rootcheck_checksys }}'
+  check_trojans: '{{ wazuh_manager_rootcheck_checktrojans }}'
+  check_unixaudit: '{{ wazuh_manager_rootcheck_checkunixaudit }}'
+  disabled: '{{ wazuh_manager_rootcheck_disabled }}'
+  frequency: '{{ wazuh_manager_rootcheck_frequency }}'
+  rootkit_files: '{{ wazuh_manager_rootcheck_rootkitfiles }}'
+  rootkit_trojans: '{{ wazuh_manager_rootcheck_rootkittrojans }}'
+  skip_nfs: '{{ wazuh_manager_rootcheck_skipnfs }}'
+  system_audit: '{{ wazuh_manager_rootcheck_systemaudit }}'
+
+wazuh_manager_rootcheck_basedirectory: '/'
+
+wazuh_manager_rootcheck_checkdev: true
+
+wazuh_manager_rootcheck_checkfiles: '{{
+ [wazuh_manager_rootcheck_rootkitfiles]|flatten|length>0 }}'
+
+wazuh_manager_rootcheck_checkif: true
+
+wazuh_manager_rootcheck_checkpids: true
+
+wazuh_manager_rootcheck_checkports: true
+
+wazuh_manager_rootcheck_checksys: true
+
+wazuh_manager_rootcheck_checktrojans: '{{
+ [wazuh_manager_rootcheck_rootkittrojans]|flatten|length>0 }}'
+
+wazuh_manager_rootcheck_checkunixaudit: true
+
+wazuh_manager_rootcheck_dir: '/var/ossec/etc/rootcheck/'
+
+wazuh_manager_rootcheck_disabled: false
+
+wazuh_manager_rootcheck_frequency: 43200
+
+wazuh_manager_rootcheck_rootkitfiles: '{{
+  wazuh_manager_rootcheck_dir }}rootkit_files.txt'
+
+wazuh_manager_rootcheck_rootkittrojans: '{{
+  wazuh_manager_rootcheck_dir }}rootkit_trojans.txt'
+
+wazuh_manager_rootcheck_skipnfs: true
+
+wazuh_manager_rootcheck_systemaudit: '{{
+  wazuh_manager_rootcheck_systemaudit_list|flatten
+  |map("regex_replace","^",wazuh_manager_rootcheck_dir)
+  |difference([wazuh_manager_rootcheck_dir])|list }}'
+
+wazuh_manager_rootcheck_systemaudit_list:
+  - 'system_audit_rcl.txt'
+  - 'system_audit_ssh.txt'
+  - '{{ wazuh_cis_file }}'
+
+wazuh_manager_ruleset:
+  decoder_dir: '{{ wazuh_manager_ruleset_decoderdir }}'
+  list: '{{ wazuh_manager_ruleset_list }}'
+  rule_dir: '{{ wazuh_manager_ruleset_ruledir }}'
+  rule_exclude: '{{ wazuh_manager_ruleset_ruleexclude }}'
+
+wazuh_manager_ruleset_decoderdir:
+  - 'ruleset/decoders'
+  - 'etc/decoders'
+
+wazuh_manager_ruleset_list: '{{
+  wazuh_cdb_lists.keys()|map("regex_replace","^","etc/lists/")|list }}'
+
+wazuh_manager_ruleset_ruledir:
+  - 'ruleset/rules'
+  - 'etc/rules'
+
+wazuh_manager_ruleset_ruleexclude: '0215-policy_rules.xml'
+
+wazuh_manager_socket: '{{
+ (wazuh_manager_socket_name is none)
+ |ternary(none, wazuh_manager_socket_) }}'
+
+wazuh_manager_socket_:
+  location: '{{ wazuh_manager_socket_location }}'
+  mode: '{{ wazuh_manager_socket_mode }}'
+  name: '{{ wazuh_manager_socket_name }}'
+  prefix: '{{ wazuh_manager_socket_prefix }}'
+
+wazuh_manager_socket_location: '{{ "/var/run/" ~ wazuh_manager_socket_name|default("custom",true) ~ ".sock" }}'
+
+wazuh_manager_socket_mode: 'udp'
+
+wazuh_manager_socket_name: null
+
+wazuh_manager_socket_prefix: 'custom'
+
+wazuh_manager_syscheck:
+  alert_new_files: '{{ wazuh_manager_syscheck_alertnewfiles }}'
+  auto_ignore: '{{ wazuh_manager_syscheck_autoignore }}'
+  directories: '{{ wazuh_manager_syscheck_directories }}'
+  frequency: '{{ wazuh_manager_syscheck_frequency }}'
+  ignore: '{{ wazuh_manager_syscheck_ignore }}'
+  nodiff: '{{ wazuh_manager_syscheck_nodiff }}'
+  remove_old_diff: '{{ wazuh_manager_syscheck_removeolddiff }}'
+  restart_audit: '{{ wazuh_manager_syscheck_restartaudit }}'
+  scan_on_start: '{{ wazuh_manager_syscheck_scanonstart }}'
+  skip_nfs: '{{ wazuh_manager_syscheck_skipnfs }}'
+
+wazuh_manager_syscheck_alertnewfiles: true
+
+wazuh_manager_syscheck_autoignore: false
+
+wazuh_manager_syscheck_directories:
+  - +check_all: true
+    _: '/etc,/usr/bin,/usr/sbin'
+  - +check_all: true
+    _: '/bin,/sbin'
+
+wazuh_manager_syscheck_frequency: 43200
+
+wazuh_manager_syscheck_ignore:
+  - '/etc/adjtime'
+  - '/etc/cups/certs'
+  - '/etc/dumpdates'
+  - '/etc/hosts.deny'
+  - '/etc/httpd/logs'
+  - '/etc/mail/statistics'
+  - '/etc/mnttab'
+  - '/etc/mtab'
+  - '/etc/random-seed'
+  - '/etc/random.seed'
+  - '/etc/svc/volatile'
+  - '/etc/utmpx'
+  - '/etc/wtmpx'
+
+wazuh_manager_syscheck_nodiff: '/etc/ssl/private.key'
+
+wazuh_manager_syscheck_removeolddiff: true
+
+wazuh_manager_syscheck_restartaudit: true
+
+wazuh_manager_syscheck_scanonstart: true
+
+wazuh_manager_syscheck_skipnfs: true
+
+wazuh_manager_syslogoutput:
+  format: '{{ wazuh_manager_syslogoutput_format }}'
+  group: '{{ wazuh_manager_syslogoutput_group }}'
+  level: '{{ wazuh_manager_syslogoutput_level }}'
+  location: '{{ wazuh_manager_syslogoutput_location }}'
+  port: '{{ wazuh_manager_syslogoutput_port }}'
+  rule_id: '{{ wazuh_manager_syslogoutput_ruleid }}'
+  server: '{{ wazuh_manager_syslogoutput_server }}'
+  use_fqdn: '{{ wazuh_manager_syslogoutput_usefqdn }}'
+
+wazuh_manager_syslogoutput_format: 'default'
+
+wazuh_manager_syslogoutput_group: null
+
+wazuh_manager_syslogoutput_level: 1
+
+wazuh_manager_syslogoutput_location: null
+
+wazuh_manager_syslogoutput_port: 514
+
+wazuh_manager_syslogoutput_ruleid: null
+
+wazuh_manager_syslogoutput_server: null
+
+wazuh_manager_syslogoutput_usefqdn: false
+
+wazuh_manager_wodle:
+  - '{{ wazuh_manager_wodle_aws }}'
+  - '{{ wazuh_manager_wodle_ciscat }}'
+  - '{{ wazuh_manager_wodle_command }}'
+  - '{{ wazuh_manager_wodle_openscap }}'
+  - '{{ wazuh_manager_wodle_osquery }}'
+  - '{{ wazuh_manager_wodle_syscollector }}'
+  - '{{ wazuh_manager_wodle_vuldetector }}'
+
+wazuh_manager_wodle_aws:
+  +name: 'aws-s3'
+  access_key: '{{ wazuh_manager_wodle_aws_accesskey }}'
+  bucket: '{{ wazuh_manager_wodle_aws_bucket }}'
+  disabled: '{{ wazuh_manager_wodle_aws_disabled }}'
+  interval: '{{ wazuh_manager_wodle_aws_interval }}'
+  remove_from_bucket: '{{ wazuh_manager_wodle_aws_removefrombucket }}'
+  run_on_start: '{{ wazuh_manager_wodle_aws_runonstart }}'
+  secret_key: '{{ wazuh_manager_wodle_aws_secretkey }}'
+  skip_on_error: '{{ wazuh_manager_wodle_aws_skiponerror }}'
+
+wazuh_manager_wodle_aws_accesskey: null
+
+wazuh_manager_wodle_aws_bucket:
+  +type: '{{ wazuh_manager_wodle_aws_bucket_type }}'
+  access_key: '{{ wazuh_manager_wodle_aws_bucket_accesskey }}'
+  aws_account_alias: '{{ wazuh_manager_wodle_aws_bucket_awsaccountalias }}'
+  aws_account_id: '{{ wazuh_manager_wodle_aws_bucket_awsaccountid }}'
+  aws_profile: '{{ wazuh_manager_wodle_aws_bucket_awsprofile }}'
+  iam_role_arn: '{{ wazuh_manager_wodle_aws_bucket_iamrolearn }}'
+  name: '{{ wazuh_manager_wodle_aws_bucket_name }}'
+  only_logs_after: '{{ wazuh_manager_wodle_aws_bucket_onlylogsafter }}'
+  path: '{{ wazuh_manager_wodle_aws_bucket_path }}'
+  regions: '{{ wazuh_manager_wodle_aws_bucket_regions }}'
+  secret_key: '{{ wazuh_manager_wodle_aws_bucket_secretkey }}'
+
+wazuh_manager_wodle_aws_bucket_type: 'cloudtrail'
+
+wazuh_manager_wodle_aws_bucket_accesskey: null
+
+wazuh_manager_wodle_aws_bucket_awsaccountalias: null
+
+wazuh_manager_wodle_aws_bucket_awsaccountid: null
+
+wazuh_manager_wodle_aws_bucket_awsprofile: null
+
+wazuh_manager_wodle_aws_bucket_iamrolearn: null
+
+wazuh_manager_wodle_aws_bucket_name: null
+
+wazuh_manager_wodle_aws_bucket_onlylogsafter: '1970-JAN-01'
+
+wazuh_manager_wodle_aws_bucket_path: null
+
+wazuh_manager_wodle_aws_bucket_regions: null
+
+wazuh_manager_wodle_aws_bucket_secretkey: null
+
+wazuh_manager_wodle_aws_disabled: true
+
+wazuh_manager_wodle_aws_interval: '10m'
+
+wazuh_manager_wodle_aws_removefrombucket: true
+
+wazuh_manager_wodle_aws_runonstart: true
+
+wazuh_manager_wodle_aws_secretkey: null
+
+wazuh_manager_wodle_aws_skiponerror: true
+
+wazuh_manager_wodle_ciscat:
+  +name: 'cis-cat'
+  ciscat_path: '{{ wazuh_manager_wodle_ciscat_ciscatpath }}'
+  content: '{{ wazuh_manager_wodle_ciscat_content|default([]) }}'
+  disabled: '{{ wazuh_manager_wodle_ciscat_disabled }}'
+  interval: '{{ wazuh_manager_wodle_ciscat_interval }}'
+  java_path: '{{ wazuh_java_path }}'
+  scan-on-start: '{{ wazuh_manager_wodle_ciscat_scanonstart }}'
+  timeout: '{{ wazuh_manager_wodle_ciscat_timeout }}'
+
+wazuh_manager_wodle_ciscat_ciscatpath: '{{
+  wazuh_manager_wodle_ciscat_ciscatpath_ }}'
+
+wazuh_manager_wodle_ciscat_ciscatpath_: null
+
+wazuh_manager_wodle_ciscat_content: '{{
+  wazuh_manager_wodle_ciscat_content_ }}'
+
+wazuh_manager_wodle_ciscat_content_: null
+
+
+wazuh_manager_wodle_ciscat_disabled: true
+
+wazuh_manager_wodle_ciscat_interval: '1d'
+
+wazuh_manager_wodle_ciscat_scanonstart: true
+
+wazuh_manager_wodle_ciscat_timeout: 1800
+
+wazuh_manager_wodle_command: '{{
+  wazuh_manager_wodle_command_vuls }}'
+
+wazuh_manager_wodle_command_vuls:
+  +name: 'command'
+  command: '{{ wazuh_manager_wodle_command_vuls_command }}'
+  disabled: '{{ wazuh_manager_wodle_command_vuls_disabled }}'
+  ignore_output: '{{ wazuh_manager_wodle_command_vuls_ignoreoutput }}'
+  interval: '{{ wazuh_manager_wodle_command_vuls_interval }}'
+  run_on_start: '{{ wazuh_manager_wodle_command_vuls_runonstart }}'
+  skip_verification: '{{
+    wazuh_manager_wodle_command_vuls_skipverification }}'
+  tag: '{{ wazuh_manager_wodle_command_vuls_tag }}'
+  timeout: '{{ wazuh_manager_wodle_command_vuls_timeout }}'
+  verify_md5: '{{ wazuh_manager_wodle_command_vuls_verifymd5 }}'
+  verify_sha1: '{{ wazuh_manager_wodle_command_vuls_verifysha1 }}'
+  verify_sha256: '{{ wazuh_manager_wodle_command_vuls_verifysha256 }}'
+
+wazuh_manager_wodle_command_vuls_command: '{{
+  wazuh_manager_wodle_command_vuls_command_ }}'
+
+wazuh_manager_wodle_command_vuls_command_args:
+  - '--antiquity-limit {{
+     wazuh_manager_wodle_command_vuls_command_args_antiquity_limit }}'
+  - '{{ wazuh_manager_wodle_command_vuls_command_args_autoupdate
+        |ternary("--autoupdate","") }}'
+  - '--mincvss {{ wazuh_manager_wodle_command_vuls_command_args_mincvss }}'
+  - '--nvd-year {{
+     wazuh_manager_wodle_command_vuls_command_args_nvd_year }}'
+  - '{{ wazuh_manager_wodle_command_vuls_command_args_updatenvd
+        |ternary("--updatenvd","") }}'
+
+wazuh_manager_wodle_command_vuls_command_args_autoupdate: true
+
+wazuh_manager_wodle_command_vuls_command_args_antiquity_limit: 20
+
+wazuh_manager_wodle_command_vuls_command_args_mincvss: 5
+
+wazuh_manager_wodle_command_vuls_command_args_nvd_year: 2016
+
+wazuh_manager_wodle_command_vuls_command_args_updatenvd: true
+
+wazuh_manager_wodle_command_vuls_command_: null
+
+wazuh_manager_wodle_command_vuls_disabled: true
+
+wazuh_manager_wodle_command_vuls_ignoreoutput: false
+
+wazuh_manager_wodle_command_vuls_interval: '1d'
+
+wazuh_manager_wodle_command_vuls_runonstart: true
+
+wazuh_manager_wodle_command_vuls_skipverification: true
+
+wazuh_manager_wodle_command_vuls_tag: 'Wazuh-VULS'
+
+wazuh_manager_wodle_command_vuls_timeout: 0
+
+wazuh_manager_wodle_command_vuls_verifymd5: null
+
+wazuh_manager_wodle_command_vuls_verifysha1: null
+
+wazuh_manager_wodle_command_vuls_verifysha256: null
+
+wazuh_manager_wodle_openscap:
+  +name: 'open-scap'
+  content: '{{ wazuh_manager_wodle_openscap_content }}'
+  disabled: '{{ wazuh_manager_wodle_openscap_disabled }}'
+  interval: '{{ wazuh_manager_wodle_openscap_interval }}'
+  scan-on-start: '{wazuh_manager_wodle_openscap_scanonstart }}'
+  timeout: '{{ wazuh_manager_wodle_openscap_timeout }}'
+
+wazuh_manager_wodle_openscap_content: '{{
+  wazuh_manager_wodle_openscap_content_ }}'
+
+wazuh_manager_wodle_openscap_content_: null
+
+wazuh_manager_wodle_openscap_disabled: true
+
+wazuh_manager_wodle_openscap_interval: '1d'
+
+wazuh_manager_wodle_openscap_scanonstart: true
+
+wazuh_manager_wodle_openscap_timeout: 1800
+
+wazuh_manager_wodle_osquery:
+  +name: 'osquery'
+  add_labels: '{{ wazuh_manager_wodle_osquery_addlabels }}'
+  bin_path: '{{ wazuh_manager_wodle_osquery_binpath }}'
+  config_path: '{{ wazuh_manager_wodle_osquery_configpath }}'
+  disabled: '{{ wazuh_manager_wodle_osquery_disabled }}'
+  log_path: '{{ wazuh_manager_wodle_osquery_logpath }}'
+  pack: '{{ wazuh_manager_wodle_osquery_pack }}'
+  run_daemon: '{{ wazuh_manager_wodle_osquery_rundaemon }}'
+
+wazuh_manager_wodle_osquery_addlabels: true
+
+wazuh_manager_wodle_osquery_bin_dir: '/var/log/osquery'
+
+wazuh_manager_wodle_osquery_binpath: null
+
+wazuh_manager_wodle_osquery_confdir: '/etc/osquery'
+
+wazuh_manager_wodle_osquery_configpath: '{{
+  wazuh_manager_wodle_osquery_confdir }}/osquery.conf'
+
+wazuh_manager_wodle_osquery_disabled: true
+
+wazuh_manager_wodle_osquery_logdir: '/var/log/osquery'
+
+wazuh_manager_wodle_osquery_logpath: '{{
+  wazuh_manager_wodle_osquery_logdir }}osqueryd.results.log'
+
+wazuh_manager_wodle_osquery_pack: null
+
+wazuh_manager_wodle_osquery_rundaemon: true
+
+wazuh_manager_wodle_syscollector:
+  +name: 'syscollector'
+  disabled: '{{ wazuh_manager_wodle_syscollector_disabled }}'
+  hardware: '{{ wazuh_manager_wodle_syscollector_hardware }}'
+  interval: '{{ wazuh_manager_wodle_syscollector_interval }}'
+  network: '{{ wazuh_manager_wodle_syscollector_network }}'
+  os: '{{ wazuh_manager_wodle_syscollector_os }}'
+  packages: '{{ wazuh_manager_wodle_syscollector_packages }}'
+  ports: '{{ wazuh_manager_wodle_syscollector_ports }}'
+  processes: '{{ wazuh_manager_wodle_syscollector_processes }}'
+  scan_on_start: '{{ wazuh_manager_wodle_syscollector_scanonstart }}'
+
+wazuh_manager_wodle_syscollector_disabled: true
+
+wazuh_manager_wodle_syscollector_hardware: true
+
+wazuh_manager_wodle_syscollector_interval: '1h'
+
+wazuh_manager_wodle_syscollector_network: true
+
+wazuh_manager_wodle_syscollector_os: true
+
+wazuh_manager_wodle_syscollector_packages: true
+
+wazuh_manager_wodle_syscollector_ports: true
+
+wazuh_manager_wodle_syscollector_processes: true
+
+wazuh_manager_wodle_syscollector_scanonstart: true
+
+wazuh_manager_wodle_vuldetector:
+  +name: 'vulnerability-detector'
+  disabled: '{{ wazuh_manager_wodle_vuldetector_disabled }}'
+  feed: '{{ wazuh_manager_wodle_vuldetector_feed }}'
+  ignore_time: '{{ wazuh_manager_wodle_vuldetector_ignore_time }}'
+  interval: '{{ wazuh_manager_wodle_vuldetector_interval }}'
+  run_on_start: '{{ wazuh_manager_wodle_vuldetector_runonstart }}'
+
+wazuh_manager_wodle_vuldetector_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed:
+ - '{{ wazuh_manager_wodle_vuldetector_feed_debian7 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_debian8 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_debian9 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_redhat5 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_redhat6 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_redhat7 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu12 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu14 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu16 }}'
+ - '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu18 }}'
+
+wazuh_manager_wodle_vuldetector_feed_debian7:
+  +name: 'debian-7'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_debian7_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_debian7_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_debian7_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_debian7_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_debian7_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_debian7_allow: 'debian-7'
+
+wazuh_manager_wodle_vuldetector_feed_debian7_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_debian7_path: null
+
+wazuh_manager_wodle_vuldetector_feed_debian7_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_debian7_url: null
+
+wazuh_manager_wodle_vuldetector_feed_debian8:
+  +name: 'debian-8'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_debian8_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_debian8_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_debian8_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_debian8_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_debian8_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_debian8_allow: 'debian-8'
+
+wazuh_manager_wodle_vuldetector_feed_debian8_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_debian8_path: null
+
+wazuh_manager_wodle_vuldetector_feed_debian8_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_debian8_url: null
+
+wazuh_manager_wodle_vuldetector_feed_debian9:
+  +name: 'debian-9'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_debian9_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_debian9_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_debian9_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_debian9_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_debian9_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_debian9_allow: 'debian-9'
+
+wazuh_manager_wodle_vuldetector_feed_debian9_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_debian9_path: null
+
+wazuh_manager_wodle_vuldetector_feed_debian9_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_debian9_url: null
+
+wazuh_manager_wodle_vuldetector_feed_redhat5:
+  +name: 'redhat-5'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_redhat5_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_redhat5_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_redhat5_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_redhat5_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_redhat5_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_redhat5_allow: 'redhat-5'
+
+wazuh_manager_wodle_vuldetector_feed_redhat5_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_redhat5_path: null
+
+wazuh_manager_wodle_vuldetector_feed_redhat5_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_redhat5_url: null
+
+wazuh_manager_wodle_vuldetector_feed_redhat6:
+  +name: 'redhat-6'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_redhat6_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_redhat6_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_redhat6_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_redhat6_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_redhat6_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_redhat6_allow: 'redhat-6'
+
+wazuh_manager_wodle_vuldetector_feed_redhat6_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_redhat6_path: null
+
+wazuh_manager_wodle_vuldetector_feed_redhat6_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_redhat6_url: null
+
+wazuh_manager_wodle_vuldetector_feed_redhat7:
+  +name: 'redhat-7'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_redhat7_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_redhat7_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_redhat7_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_redhat7_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_redhat7_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_redhat7_allow: 'redhat-7'
+
+wazuh_manager_wodle_vuldetector_feed_redhat7_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_redhat7_path: null
+
+wazuh_manager_wodle_vuldetector_feed_redhat7_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_redhat7_url: null
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu12:
+  +name: 'ubuntu-12'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu12_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_ubuntu12_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu12_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_ubuntu12_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu12_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu12_allow: 'ubuntu-12'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu12_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu12_path: null
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu12_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu12_url: null
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu14:
+  +name: 'ubuntu-14'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu14_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_ubuntu14_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu14_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_ubuntu14_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu14_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu14_allow: 'ubuntu-14'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu14_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu14_path: null
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu14_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu14_url: null
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu16:
+  +name: 'ubuntu-16'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu16_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_ubuntu16_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu16_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_ubuntu16_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu16_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu16_allow: 'ubuntu-16'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu16_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu16_path: null
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu16_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu16_url: null
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu18:
+  +name: 'ubuntu-18'
+  allow: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu18_allow }}'
+  disabled: '{{
+    wazuh_manager_wodle_vuldetector_feed_ubuntu18_disabled }}'
+  path: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu18_path }}'
+  update_interval: '{{
+    wazuh_manager_wodle_vuldetector_feed_ubuntu18_updateinterval }}'
+  url: '{{ wazuh_manager_wodle_vuldetector_feed_ubuntu18_url }}'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu18_allow: 'ubuntu-18'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu18_disabled: true
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu18_path: null
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu18_updateinterval: '1h'
+
+wazuh_manager_wodle_vuldetector_feed_ubuntu18_url: null
+
+wazuh_manager_wodle_vuldetector_ignore_time: '6h'
+
+wazuh_manager_wodle_vuldetector_interval: '1m'
+
+wazuh_manager_wodle_vuldetector_runonstart: true
+
+wazuh_packages: '{{ wazuh_api_install|ternary(
+  wazuh_packages_api|union(wazuh_packages_manager), wazuh_packages_manager) }}'
+
+wazuh_packages_api:
+  - 'python-passlib'
+  - 'wazuh-api'
+
+wazuh_packages_manager:
+  - 'expect'
+  - 'wazuh-manager'
+
+wazuh_repo_add: true
+
+wazuh_repo_remove: true
+
+wazuh_rules:
+  group:
+    - +name: 'local,syslog,sshd,'
+      rule: '{{ wazuh_rules_auth }}'
+    - +name: 'local,ossec,'
+      rule:
+        - '{{ wazuh_rules_linux }}'
+        - '{{ wazuh_rules_windows }}'
+
+wazuh_rules_auth:
+  +id: 100001
+  +level: 5
+  if_sid: 5716
+  srcip: '1.1.1.1'
+  description: 'sshd: authentication failed from IP 1.1.1.1.'
+  group: 'authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,'
+
+wazuh_rules_linux:
+  +id: 100002
+  +level: 1
+  if_group: 'syscheck'
+  match: '/var/ossec/etc/shared/agent.conf'
+  description: 'Linux | agent.conf was modified'
+
+wazuh_rules_windows:
+  +id: 100003
+  +level: 1
+  if_group: 'syscheck'
+  match: 'C:/Program Files (x86)/ossec-agent/shared/agent.conf'
+  description: 'Windows | agent.conf was modified'
+
+wazuh_java_install: false
+
+wazuh_java_path: null
+
+wazuh_shared:
+  default:
+    agent_config:
+      - '{{ wazuh_shared_linux }}'
+      - '{{ wazuh_shared_windows }}'
+
+wazuh_shared_linux:
+  +os: 'Linux'
+  localfile: '{{ wazuh_shared_linux_localfile }}'
+  rootcheck: '{{ wazuh_shared_linux_rootcheck }}'
+  syscheck: '{{ wazuh_shared_linux_syscheck }}'
+
+wazuh_shared_linux_localfile: '{{ wazuh_shared_linux_localfile_command
+                           |union(wazuh_shared_linux_localfile_syslog)
+                           |flatten|list }}'
+
+wazuh_shared_linux_localfile_command:
+  - '{{ wazuh_shared_linux_localfile_command_custom }}'
+  - '{{ wazuh_shared_linux_localfile_command_df }}'
+  - '{{ wazuh_shared_linux_localfile_command_last }}'
+  - '{{ wazuh_shared_linux_localfile_command_netstat }}'
+
+wazuh_shared_linux_localfile_command_custom: '{{ wazuh_manager_localfile_command_custom }}'
+
+wazuh_shared_linux_localfile_command_df: '{{ wazuh_manager_localfile_command_df }}'
+
+wazuh_shared_linux_localfile_command_last: '{{ wazuh_manager_localfile_command_last }}'
+
+wazuh_shared_linux_localfile_command_netstat: '{{ wazuh_manager_localfile_command_netstat }}'
+
+wazuh_shared_linux_localfile_syslog:
+   - '{{ wazuh_shared_linux_localfile_syslog_messages }}'
+   - '{{ wazuh_shared_linux_localfile_syslog_secure }}'
+
+wazuh_shared_linux_localfile_syslog_messages:
+  log_format: 'syslog'
+  location: '{{ wazuh_shared_linux_localfile_syslog_messages_location }}'
+
+wazuh_shared_linux_localfile_syslog_messages_location: '{{
+  wazuh_manager_localfile_syslog_messages_location }}'
+
+wazuh_shared_linux_localfile_syslog_secure:
+  log_format: 'syslog'
+  location: '{{ wazuh_shared_linux_localfile_syslog_secure_location }}'
+
+wazuh_shared_linux_localfile_syslog_secure_location: '{{
+  wazuh_manager_localfile_syslog_secure_location }}'
+
+wazuh_shared_linux_rootcheck:
+  base_directory: '{{ wazuh_shared_linux_rootcheck_basedirectory }}'
+  check_dev: '{{ wazuh_shared_linux_rootcheck_checkdev }}'
+  check_files: '{{ wazuh_shared_linux_rootcheck_checkfiles }}'
+  check_if: '{{ wazuh_shared_linux_rootcheck_checkif }}'
+  check_pids: '{{ wazuh_shared_linux_rootcheck_checkpids }}'
+  check_ports: '{{ wazuh_shared_linux_rootcheck_checkports }}'
+  check_sys: '{{ wazuh_shared_linux_rootcheck_checksys }}'
+  check_trojans: '{{ wazuh_shared_linux_rootcheck_checktrojans }}'
+  check_unixaudit: '{{ wazuh_shared_linux_rootcheck_checkunixaudit }}'
+  disabled: '{{ wazuh_shared_linux_rootcheck_disabled }}'
+  frequency: '{{ wazuh_shared_linux_rootcheck_frequency }}'
+  rootkit_files: '{{ wazuh_shared_linux_rootcheck_rootkitfiles }}'
+  rootkit_trojans: '{{ wazuh_shared_linux_rootcheck_rootkittrojans }}'
+  skip_nfs: '{{ wazuh_shared_linux_rootcheck_skipnfs }}'
+  system_audit: '{{ wazuh_shared_linux_rootcheck_systemaudit }}'
+
+wazuh_shared_linux_rootcheck_basedirectory: '{{ wazuh_manager_rootcheck_basedirectory }}'
+
+wazuh_shared_linux_rootcheck_checkdev: '{{ wazuh_manager_rootcheck_checkdev }}'
+
+wazuh_shared_linux_rootcheck_checkfiles: '{{ wazuh_manager_rootcheck_checkfiles }}'
+
+wazuh_shared_linux_rootcheck_checkif: '{{ wazuh_manager_rootcheck_checkif }}'
+
+wazuh_shared_linux_rootcheck_checkpids: '{{ wazuh_manager_rootcheck_checkpids }}'
+
+wazuh_shared_linux_rootcheck_checkports: '{{ wazuh_manager_rootcheck_checkports }}'
+
+wazuh_shared_linux_rootcheck_checksys: '{{ wazuh_manager_rootcheck_checksys }}'
+
+wazuh_shared_linux_rootcheck_checktrojans: '{{ wazuh_manager_rootcheck_checktrojans }}'
+
+wazuh_shared_linux_rootcheck_checkunixaudit: '{{ wazuh_manager_rootcheck_checkunixaudit }}'
+
+wazuh_shared_linux_rootcheck_dir: '/var/ossetc/etc/shared/default/'
+
+wazuh_shared_linux_rootcheck_disabled: '{{ wazuh_manager_rootcheck_disabled }}'
+
+wazuh_shared_linux_rootcheck_frequency: '{{ wazuh_manager_rootcheck_frequency }}'
+
+wazuh_shared_linux_rootcheck_rootkitfiles: '{{
+  wazuh_shared_linux_rootcheck_dir }}rootkit_files.txt'
+
+wazuh_shared_linux_rootcheck_rootkittrojans: '{{
+  wazuh_shared_linux_rootcheck_dir }}rootkit_trojans.txt'
+
+wazuh_shared_linux_rootcheck_skipnfs: '{{ wazuh_manager_rootcheck_skipnfs }}'
+
+wazuh_shared_linux_rootcheck_systemaudit: '{{
+  wazuh_shared_linux_rootcheck_systemaudit_list|flatten
+  |map("regex_replace","^",wazuh_shared_linux_rootcheck_dir)
+  |difference([wazuh_shared_linux_rootcheck_dir])|list }}'
+
+wazuh_shared_linux_rootcheck_systemaudit_list:
+  - 'system_audit_rcl.txt'
+  - 'system_audit_ssh.txt'
+  - '{{ wazuh_cis_file_debian }}'
+  - '{{ wazuh_cis_file_rhel5 }}'
+  - '{{ wazuh_cis_file_rhel6 }}'
+  - '{{ wazuh_cis_file_rhel7 }}'
+
+wazuh_shared_linux_syscheck:
+  alert_new_files: '{{ wazuh_shared_linux_syscheck_alertnewfiles }}'
+  auto_ignore: '{{ wazuh_shared_linux_syscheck_autoignore }}'
+  directories: '{{ wazuh_shared_linux_syscheck_directories }}'
+  frequency: '{{ wazuh_shared_linux_syscheck_frequency }}'
+  ignore: '{{ wazuh_shared_linux_syscheck_ignore }}'
+  nodiff: '{{ wazuh_shared_linux_syscheck_nodiff }}'
+  remove_old_diff: '{{ wazuh_shared_linux_syscheck_removeolddiff }}'
+  restart_audit: '{{ wazuh_shared_linux_syscheck_restartaudit }}'
+  scan_on_start: '{{ wazuh_shared_linux_syscheck_scanonstart }}'
+  skip_nfs: '{{ wazuh_shared_linux_syscheck_skipnfs }}'
+
+wazuh_shared_linux_syscheck_alertnewfiles: '{{ wazuh_manager_syscheck_alertnewfiles }}'
+
+wazuh_shared_linux_syscheck_autoignore: '{{ wazuh_manager_syscheck_autoignore }}'
+
+wazuh_shared_linux_syscheck_directories: '{{ wazuh_manager_syscheck_directories }}'
+
+wazuh_shared_linux_syscheck_frequency: '{{ wazuh_manager_syscheck_frequency }}'
+
+wazuh_shared_linux_syscheck_ignore: '{{ wazuh_manager_syscheck_ignore }}'
+
+wazuh_shared_linux_syscheck_nodiff: '{{ wazuh_manager_syscheck_nodiff }}'
+
+wazuh_shared_linux_syscheck_removeolddiff: '{{ wazuh_manager_syscheck_removeolddiff }}'
+
+wazuh_shared_linux_syscheck_restartaudit: '{{ wazuh_manager_syscheck_restartaudit }}'
+
+wazuh_shared_linux_syscheck_scanonstart: '{{ wazuh_manager_syscheck_scanonstart }}'
+
+wazuh_shared_linux_syscheck_skipnfs: '{{ wazuh_manager_syscheck_skipnfs }}'
+
+
+wazuh_shared_windows:
+  +os: 'Windows'
+  localfile: '{{ wazuh_shared_windows_localfile }}'
+  rootcheck: '{{ wazuh_shared_windows_rootcheck }}'
+  syscheck: '{{ wazuh_shared_windows_syscheck }}'
+
+wazuh_shared_windows_localfile: null
+
+wazuh_shared_windows_rootcheck:
+  base_directory: '{{ wazuh_shared_windows_rootcheck_basedirectory }}'
+  check_dev: '{{ wazuh_shared_windows_rootcheck_checkdev }}'
+  check_files: '{{ wazuh_shared_windows_rootcheck_checkfiles }}'
+  check_if: '{{ wazuh_shared_windows_rootcheck_checkif }}'
+  check_pids: '{{ wazuh_shared_windows_rootcheck_checkpids }}'
+  check_ports: '{{ wazuh_shared_windows_rootcheck_checkports }}'
+  check_sys: '{{ wazuh_shared_windows_rootcheck_checksys }}'
+  check_trojans: '{{ wazuh_shared_windows_rootcheck_checktrojans }}'
+  check_unixaudit: '{{ wazuh_shared_windows_rootcheck_checkunixaudit }}'
+  disabled: '{{ wazuh_shared_windows_rootcheck_disabled }}'
+  frequency: '{{ wazuh_shared_windows_rootcheck_frequency }}'
+  rootkit_files: '{{ wazuh_shared_windows_rootcheck_rootkitfiles }}'
+  rootkit_trojans: '{{ wazuh_shared_windows_rootcheck_rootkittrojans }}'
+  skip_nfs: '{{ wazuh_shared_windows_rootcheck_skipnfs }}'
+  system_audit: '{{ wazuh_shared_windows_rootcheck_systemaudit }}'
+  windows_apps: '{{ wazuh_shared_windows_rootcheck_windowsapps }}'
+  windows_audit: '{{ wazuh_shared_windows_rootcheck_windowsaudit }}'
+  windows_malware: '{{ wazuh_shared_windows_rootcheck_windowsmalware }}'
+
+wazuh_shared_windows_rootcheck_basedirectory: 'C:/'
+
+wazuh_shared_windows_rootcheck_checkdev: '{{ wazuh_manager_rootcheck_checkdev }}'
+
+wazuh_shared_windows_rootcheck_checkfiles: '{{
+ [wazuh_shared_windows_rootcheck_rootkitfiles]|flatten|length>0 }}'
+
+wazuh_shared_windows_rootcheck_checkif: '{{ wazuh_manager_rootcheck_checkif }}'
+
+wazuh_shared_windows_rootcheck_checkpids: '{{
+  wazuh_manager_rootcheck_checkpids }}'
+
+wazuh_shared_windows_rootcheck_checkports: '{{
+  wazuh_manager_rootcheck_checkports }}'
+
+wazuh_shared_windows_rootcheck_checksys: '{{ wazuh_manager_rootcheck_checksys }}'
+
+wazuh_shared_windows_rootcheck_checktrojans: '{{
+  [wazuh_shared_windows_rootcheck_rootkittrojans]|flatten|length>0 }}'
+
+wazuh_shared_windows_rootcheck_checkunixaudit: '{{
+  wazuh_manager_rootcheck_checkunixaudit }}'
+
+wazuh_shared_windows_rootcheck_disabled: '{{ wazuh_manager_rootcheck_disabled }}'
+
+wazuh_shared_windows_rootcheck_frequency: '{{
+  wazuh_manager_rootcheck_frequency }}'
+
+wazuh_shared_windows_rootcheck_rootkit_dir: 'C:/Program Files (x86)/ossec-agent/shared'
+
+wazuh_shared_windows_rootcheck_rootkitfiles: []
+
+wazuh_shared_windows_rootcheck_rootkittrojans: []
+
+wazuh_shared_windows_rootcheck_skipnfs: '{{ wazuh_manager_rootcheck_skipnfs }}'
+
+wazuh_shared_windows_rootcheck_systemaudit: null
+
+wazuh_shared_windows_rootcheck_windowsapps: './shared/win_applications_rcl.txt'
+
+wazuh_shared_windows_rootcheck_windowsaudit: './shared/win_audit_rcl.txt'
+
+wazuh_shared_windows_rootcheck_windowsmalware: './shared/win_malware_rcl.txt'
+
+wazuh_shared_windows_syscheck:
+  alert_new_files: '{{ wazuh_shared_windows_syscheck_alertnewfiles }}'
+  auto_ignore: '{{ wazuh_shared_windows_syscheck_autoignore }}'
+  directories: '{{ wazuh_shared_windows_syscheck_directories }}'
+  frequency: '{{ wazuh_shared_windows_syscheck_frequency }}'
+  ignore: '{{ wazuh_shared_windows_syscheck_ignore }}'
+  nodiff: '{{ wazuh_shared_windows_syscheck_nodiff }}'
+  remove_old_diff: '{{ wazuh_shared_windows_syscheck_removeolddiff }}'
+  restart_audit: '{{ wazuh_shared_windows_syscheck_restartaudit }}'
+  scan_on_start: '{{ wazuh_shared_windows_syscheck_scanonstart }}'
+  skip_nfs: '{{ wazuh_shared_windows_syscheck_skipnfs }}'
+  windows_audit_interval: '{{ wazuh_shared_windows_syscheck_windowsauditinterval }}'
+  windows_registry: '{{ wazuh_shared_windows_syscheck_windowsregistry }}'
+
+wazuh_shared_windows_syscheck_alertnewfiles: '{{
+  wazuh_manager_syscheck_alertnewfiles }}'
+
+wazuh_shared_windows_syscheck_autoignore: '{{
+  wazuh_manager_syscheck_autoignore }}'
+
+wazuh_shared_windows_syscheck_directories:
+  +check_all: true
+  +realtime: true
+  +restrict: '^C:/Program Files (x86)/ossec-agent/shared/agent.conf$'
+  _: 'C:/Program Files (x86)/ossec-agent/shared'
+
+wazuh_shared_windows_syscheck_frequency: '{{ wazuh_manager_syscheck_frequency }}'
+
+wazuh_shared_windows_syscheck_ignore: 'C:/Windows/Temp'
+
+wazuh_shared_windows_syscheck_nodiff: null
+
+wazuh_shared_windows_syscheck_removeolddiff: '{{
+  wazuh_manager_syscheck_removeolddiff }}'
+
+wazuh_shared_windows_syscheck_restartaudit: '{{
+  wazuh_manager_syscheck_restartaudit }}'
+
+wazuh_shared_windows_syscheck_scanonstart: '{{
+  wazuh_manager_syscheck_scanonstart }}'
+
+wazuh_shared_windows_syscheck_skipnfs: '{{ wazuh_manager_syscheck_skipnfs }}'
+
+wazuh_shared_windows_syscheck_windowsauditinterval: 300
+
+wazuh_shared_windows_syscheck_windowsregistry:
+  - +arch: 'both'
+    _: 'HKEY_LOCAL_MACHINE\Software\Classes\batfile'
+  - 'HKEY_LOCAL_MACHINE\Software\Classes\Folder'
+
+wazuh_ssl_cn: "wazuh-server"

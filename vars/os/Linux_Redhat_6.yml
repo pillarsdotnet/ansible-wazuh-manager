@@ -1,0 +1,12 @@
+---
+
+wazuh_cis_file_: '{{ wazuh_cis_file_rhel6 }}'
+
+wazuh_manager_wodle_openscap_content_:
+  - +type: 'oval'
+    +path: 'cve-redhat-6-ds.xml'
+  - +type: 'xccdf'
+    +path: 'ssg-rhel-6-ds.xml'
+    profile:
+      - 'xccdf_org.ssgproject.content_profile_common'
+      - 'xccdf_org.ssgproject.content_profile_pci-dss'

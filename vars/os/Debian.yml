@@ -1,0 +1,16 @@
+---
+
+nodejs_repo: 'deb https://deb.nodesource.com/node_6.x
+              {{ ansible_distribution_release }} main'
+
+nodejs_repo_key: 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key'
+
+wazuh_cis_file_: '{{ wazuh_cis_file_debian }}'
+
+wazuh_manager_localfile_syslog_messages_location: '/var/log/syslog'
+
+wazuh_manager_localfile_syslog_secure_location: '/var/log/auth.log'
+
+wazuh_repo: 'deb https://packages.wazuh.com/3.x/apt/ stable main'
+
+wazuh_repo_key: 'https://packages.wazuh.com/key/GPG-KEY-WAZUH'

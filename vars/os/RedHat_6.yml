@@ -1,0 +1,12 @@
+---
+
+nodejs_repo: 'https://rpm.nodesource.com/pub_6.x/el/6/x86_64'
+
+nodejs_repo_key: "https://rpm.nodesource.com/pub/el/\
+                  NODESOURCE-GPG-SIGNING-KEY-EL"
+
+wazuh_cis_file_: '{{ wazuh_cis_file_rhel6 }}'
+
+wazuh_repo: 'https://packages.wazuh.com/3.x/yum/'
+
+wazuh_repo_key: 'https://packages.wazuh.com/key/GPG-KEY-WAZUH'

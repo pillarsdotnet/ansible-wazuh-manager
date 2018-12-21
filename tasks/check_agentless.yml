@@ -1,0 +1,13 @@
+---
+
+- name: 'Set wazuh_agentless_enabled fact.'
+  set_fact:
+    wazuh_agentless_enabled: true
+- name: 'Build wazuh_agentless_creeds fact.'
+  set_fact:
+    wazuh_agentless_creeds: '{{ [wazuh_agentless_creeds]|flatten
+                                |union([host+"|"+passwd]) }}'
+  vars:
+    host: 'wazuh_agentless.host'
+    passwd: 'wazuh_agentless.passwd|default(none)'
+  when: 'wazuh_agentless.passwd is string'
