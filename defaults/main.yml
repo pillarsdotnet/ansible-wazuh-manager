@@ -229,7 +229,7 @@ wazuh_manager_command_winroutenull:
 
 wazuh_manager_databaseoutput: '{{
   (wazuh_manager_databaseoutput_password is none)
-  |ternary(none,wazuh_manager_databaseoutput_) }}'
+  |ternary(none, wazuh_manager_databaseoutput_) }}'
 
 wazuh_manager_databaseoutput_:
   database: '{{ wazuh_manager_databaseoutput_database }}'
@@ -260,13 +260,13 @@ wazuh_manager_emailalerts_donotdelay: false
 
 wazuh_manager_emailalerts_donotdelay_: '{{
   wazuh_manager_emailalerts_donotdelay
-  |ternary({}, {"do_not_delay": null}) }}'
+  |ternary({"do_not_delay": null}, {}) }}'
 
 wazuh_manager_emailalerts_donotgroup: false
 
 wazuh_manager_emailalerts_donotgroup_: '{{
   wazuh_manager_emailalerts_donotgroup
-  |ternary({}, {"do_not_group": null}) }}'
+  |ternary({"do_not_group": null}, {}) }}'
 
 wazuh_manager_emailalerts_emailto: null
 
@@ -274,7 +274,7 @@ wazuh_manager_emailalerts_eventlocation: null
 
 wazuh_manager_emailalerts_eventlocation_: '{{
   (wazuh_manager_emailalerts_eventlocation is none)
-  |ternary({}, {"event_location": wazuh_manager_emailalerts_eventlocation} }}'
+  |ternary({}, {"event_location": wazuh_manager_emailalerts_eventlocation}) }}'
 
 wazuh_manager_emailalerts_format: 'default'
 
@@ -282,7 +282,7 @@ wazuh_manager_emailalerts_group: null
 
 wazuh_manager_emailalerts_group_: '{{
   (wazuh_manager_emailalerts_group is none)
-  |ternary({}, {"group": wazuh_manager_emailalerts_group} }}'
+  |ternary({}, {"group": wazuh_manager_emailalerts_group}) }}'
 
 wazuh_manager_emailalerts_level: 2
 
