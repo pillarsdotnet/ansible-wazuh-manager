@@ -324,7 +324,7 @@ wazuh_manager_global:
   prelude_output: '{{ wazuh_manager_global_preludeoutput }}'
   queue_size: '{{ wazuh_manager_global_queuesize }}'
   rootkit_detection: '{{ wazuh_manager_global_rootkitdetection }}'
-  rotate_interval: '{{ wazauh_rotateinterval }}'
+  rotate_interval: '{{ wazuh_manager_global_rotateinterval }}'
   smtp_server: '{{ wazuh_manager_global_smtpserver }}'
   stats: '{{ wazuh_manager_global_stats }}'
   white_list: '{{ wazuh_manager_global_whitelist }}'
