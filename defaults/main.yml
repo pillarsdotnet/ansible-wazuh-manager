@@ -250,7 +250,7 @@ wazuh_manager_databaseoutput_username: 'wazuh'
 
 wazuh_manager_emailalerts: '{{
   (wazuh_manager_emailalerts_emailto is none)
-  |ternary(none, wazuh_manager_emailalerts_)) }}'
+  |ternary(none, wazuh_manager_emailalerts_) }}'
 
 wazuh_manager_emailalerts_: '{{
   wazuh_manager_emailalerts_optional
