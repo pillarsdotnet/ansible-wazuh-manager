@@ -72,8 +72,8 @@ Example Playbook
         - 'ansible-wazuh-manager'
       vars:
         wazuh_authd_pass: 'S3CR3T'
-		wazuh_manager_auth_disabled: false
-	    wazuh_manager_auth_usepassword: true
+        wazuh_manager_auth_disabled: false
+        wazuh_manager_auth_usepassword: true
         
 ```
 
