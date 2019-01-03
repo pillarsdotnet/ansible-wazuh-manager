@@ -18,169 +18,74 @@
   when: 'wazuh_repo_add'
 
 - name: 'RedHat/CentOS/Fedora | Install openscap'
-  block:
-    - name: 'RedHat/CentOS/Fedora | Install openscap (package)'
-      package:
-        name: 'openscap-scanner'
-        state: 'present'
-      async: '{{ wazuh_async_timeout }}'
-      poll: 0
-      register: 'wazuh_manager_redhat_1'
-    - name: 'RedHat/CentOS/Fedora | Install openscap (async_status)'
-      async_status:
-        jid: '{{ wazuh_manager_redhat_1.ansible_job_id }}'
-      register: 'wazuh_manager_redhat_1_result'
-      retries: '{{ wazuh_async_tries }}'
-      until: 'wazuh_manager_redhat_1_result is defined and
-              wazuh_manager_redhat_1_result.finished|default(false)'
-      when: 'wazuh_manager_redhat_1 is defined and not (
-             wazuh_manager_redhat_1.finished|default(false) or
-             wazuh_manager_redhat_1.ansible_job_id is not defined)'
+  async: '{{ wazuh_async_timeout }}'
+  package:
+    name: 'openscap-scanner'
+    state: 'present'
+  poll: '{{ wazuh_async_poll }}'
   tags:
     - 'init'
   when: 'wazuh_openscap_enabled|default(false)'
 
 - block:
     - name: 'CentOS 6 | Install Software Collections (SCL) Repository'
-      block:
-        - name: 'CentOS 6 |
-                 Install Software Collections (SCL) Repository (package)'
-          package:
-            name: 'centos-release-scl'
-            state: 'present'
-          async: '{{ wazuh_async_timeout }}'
-          poll: 0
-          register: 'wazuh_manager_redhat_2'
-        - name: 'CentOS 6 |
-                 Install Software Collections (SCL) Repository (async_status)'
-          async_status:
-            jid: '{{ wazuh_manager_redhat_2.ansible_job_id }}'
-          register: 'wazuh_manager_redhat_2_result'
-          retries: '{{ wazuh_async_tries }}'
-          until: 'wazuh_manager_redhat_2_result is defined and
-                  wazuh_manager_redhat_2_result.finished|default(false)'
-          when: 'wazuh_manager_redhat_2 is defined and not (
-                 wazuh_manager_redhat_2.finished|default(false) or
-                 wazuh_manager_redhat_2.ansible_job_id is not defined)'
+      async: '{{ wazuh_async_timeout }}'
+      package:
+        name: 'centos-release-scl'
+        state: 'present'
+      poll: '{{ wazuh_async_poll }}'
       when: 'ansible_distribution == "CentOS" and
              ansible_distribution_major_version == "6"'
     - name: 'RedHat 6 | Enabling Red Hat Software Collections (RHSCL)'
+      async: '{{ wazuh_async_timeout }}'
       command: 'yum-config-manager --enable {{ item }}'
       loop:
         - 'rhui-REGION-rhel-server-rhscl'
         - 'rhel-server-rhscl-6-rpms'
+      poll: '{{ wazuh_async_poll }}'
       when:
         - 'ansible_distribution == "RedHat" and
            ansible_distribution_major_version == "6"'
     - name: 'CentOS/RedHat 6 | Install Python 2.7'
-      block:
-        - name: 'CentOS/RedHat 6 | Install Python 2.7 (package)'
-          package:
-            name: 'python27'
-            state: 'present'
-          async: '{{ wazuh_async_timeout }}'
-          poll: 0
-          register: 'wazuh_manager_redhat_3'
-        - name: 'CentOS/RedHat 6 | Install Python 2.7 (async_status)'
-          async_status:
-            jid: '{{ wazuh_manager_redhat_3.ansible_job_id }}'
-          register: 'wazuh_manager_redhat_3_result'
-          retries: '{{ wazuh_async_tries }}'
-          until: 'wazuh_manager_redhat_3_result is defined and
-                  wazuh_manager_redhat_3_result.finished|default(false)'
-          when: 'wazuh_manager_redhat_3 is defined and not (
-                 wazuh_manager_redhat_3.finished|default(false) or
-                 wazuh_manager_redhat_3.ansible_job_id is not defined)'
+      async: '{{ wazuh_async_timeout }}'
+      package:
+        name: 'python27'
+        state: 'present'
+      poll: '{{ wazuh_async_poll }}'
       when: 'ansible_distribution in ["CentOS","RedHat"] and
              ansible_distribution_major_version == "6"'
     - name: 'CentOS/RedHat 6 | Install python-cryptography module'
-      block:
-        - name: 'CentOS/RedHat 6 | Install python-cryptography module (pip)'
-          pip:
-            executable: 'pip2.7'
-            name: 'cryptography'
-          async: '{{ wazuh_async_timeout }}'
-          poll: 0
-          register: 'wazuh_manager_redhat_4'
-        - name: 'CentOS/RedHat 6 |
-                 Install python-cryptography module (async_status)'
-          async_status:
-            jid: '{{ wazuh_manager_redhat_4.ansible_job_id }}'
-          register: 'wazuh_manager_redhat_4_result'
-          retries: '{{ wazuh_async_tries }}'
-          until: 'wazuh_manager_redhat_4_result is defined and
-                  wazuh_manager_redhat_4_result.finished|default(false)'
-          when: 'wazuh_manager_redhat_4 is defined and not (
-                 wazuh_manager_redhat_4.finished|default(false) or
-                 wazuh_manager_redhat_4.ansible_job_id is not defined)'
+      async: '{{ wazuh_async_timeout }}'
+      pip:
+        executable: 'pip2.7'
+        name: 'cryptography'
+      poll: '{{ wazuh_async_poll }}'
       when: 'ansible_distribution in ["CentOS","RedHat"] and
              ansible_distribution_major_version == "6"'
     - name: 'RedHat/CentOS/Fedora | Install python-cryptography module'
-      block:
-        - name: 'RedHat/CentOS/Fedora |
-                 Install python-cryptography module (package)'
-          package:
-            name: 'python-cryptography'
-            state: 'present'
-          async: '{{ wazuh_async_timeout }}'
-          poll: 0
-          register: 'wazuh_manager_redhat_5'
-        - name: 'RedHat/CentOS/Fedora |
-                 Install python-cryptography module (async_status)'
-          async_status:
-            jid: '{{ wazuh_manager_redhat_5.ansible_job_id }}'
-          register: 'wazuh_manager_redhat_5_result'
-          retries: '{{ wazuh_async_tries }}'
-          until: 'wazuh_manager_redhat_5_result is defined and
-                  wazuh_manager_redhat_5_result.finished|default(false)'
-          when: 'wazuh_manager_redhat_5 is defined and not (
-                 wazuh_manager_redhat_5.finished|default(false) or
-                 wazuh_manager_redhat_5.ansible_job_id is not defined)'
+      async: '{{ wazuh_async_timeout }}'
+      package:
+        name: 'python-cryptography'
+        state: 'present'
+      poll: '{{ wazuh_async_poll }}'
       when: 'not ( ansible_distribution in ["CentOS","RedHat"]
                and ansible_distribution_major_version == "6" )'
   when: 'wazuh_cluster_enabled|default(false)'
 
 - block:
     - name: 'RedHat/CentOS/Fedora | download Oracle Java RPM'
-      block:
-        - name: 'RedHat/CentOS/Fedora | download Oracle Java RPM (get_url)'
-          get_url:
-            url: '{{ oracle_java_url }}'
-            dest: '/tmp/{{ oracle_java_url|basename }}'
-            headers: 'Cookie:oraclelicense=accept-securebackup-cookie'
-          async: '{{ wazuh_async_timeout }}'
-          poll: 0
-          register: 'wazuh_manager_redhat_6'
-        - name: 'RedHat/CentOS/Fedora | download Oracle Java RPM (async_status)'
-          async_status:
-            jid: '{{ wazuh_manager_redhat_6.ansible_job_id }}'
-          register: 'oracle_java_task_rpm_download'
-          retries: '{{ wazuh_async_tries }}'
-          until: 'oracle_java_task_rpm_download is defined and
-                  oracle_java_task_rpm_download.finished|default(false)'
-          when: 'wazuh_manager_redhat_6 is defined and not (
-                 wazuh_manager_redhat_6.finished|default(false) or
-                 wazuh_manager_redhat_6.ansible_job_id is not defined)'
+      async: '{{ wazuh_async_timeout }}'
+      get_url:
+        url: '{{ oracle_java_url }}'
+        dest: '/tmp/{{ oracle_java_url|basename }}'
+        headers: 'Cookie:oraclelicense=accept-securebackup-cookie'
+      poll: '{{ wazuh_async_poll }}'
     - name: 'RedHat/CentOS/Fedora | Install Oracle Java RPM'
-      block:
-        - name: 'RedHat/CentOS/Fedora | Install Oracle Java RPM (package)'
-          package:
-            name: '/tmp/{{ oracle_java_url|basename }}'
-            state: 'present'
-          async: '{{ wazuh_async_timeout }}'
-          poll: 0
-          register: 'wazuh_manager_redhat_7'
-        - name: 'RedHat/CentOS/Fedora |
-                 Install python-cryptography module (async_status)'
-          async_status:
-            jid: '{{ wazuh_manager_redhat_7.ansible_job_id }}'
-          register: 'wazuh_manager_redhat_7_result'
-          retries: '{{ wazuh_async_tries }}'
-          until: 'wazuh_manager_redhat_7_result is defined and
-                  wazuh_manager_redhat_7_result.finished|default(false)'
-          when: 'wazuh_manager_redhat_7 is defined and not (
-                 wazuh_manager_redhat_7.finished|default(false) or
-                 wazuh_manager_redhat_7.ansible_job_id is not defined)'
+      async: '{{ wazuh_async_timeout }}'
+      package:
+        name: '/tmp/{{ oracle_java_url|basename }}'
+        state: 'present'
+      poll: '{{ wazuh_async_poll }}'
       when:
         - 'oracle_java_task_rpm_download is defined'
         - '"finished" in oracle_java_task_rpm_download'

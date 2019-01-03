@@ -1,8 +1,12 @@
 ---
 
+java_repo_add: true
+
+java_repo_remove: false
+
 nodejs_repo_add: true
 
-nodejs_repo_remove: true
+nodejs_repo_remove: false
 
 wazuh_agentless_hosts:
   cisco@example.com:            # Routers may require an additional password.
@@ -16,9 +20,9 @@ wazuh_api_install: true
 wazuh_api_users:  # user "foo" has password "bar"
   foo: 'bar'
 
-wazuh_async_timeout: 1000
+wazuh_async_poll: 10
 
-wazuh_async_tries: 30
+wazuh_async_timeout: 1000
 
 wazuh_authd_pass: null  # Change to enable password-auth for registration.
 
@@ -1255,7 +1259,7 @@ wazuh_packages_manager:
 
 wazuh_repo_add: true
 
-wazuh_repo_remove: true
+wazuh_repo_remove: false
 
 wazuh_rules:
   group:

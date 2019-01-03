@@ -24,25 +24,12 @@
   when: 'ansible_os_family == "Debian"'
 
 - name: 'Install wazuh packages'
-  block:
-    - name: 'Install wazuh packages (package)'
-      changed_when: false
-      package:
-        pkg: '{{ wazuh_packages }}'
-        state: 'latest'
-      async: '{{ wazuh_async_timeout }}'
-      poll: 0
-      register: 'wazuh_manager_main_1'
-    - name: 'Install wazuh packages (async_status)'
-      async_status:
-        jid: '{{ wazuh_manager_main_1.ansible_job_id }}'
-      register: 'wazuh_manager_main_1_result'
-      retries: '{{ wazuh_async_tries }}'
-      until: 'wazuh_manager_main_1_result is defined and
-              wazuh_manager_main_1_result.finished|default(false)'
-      when: 'wazuh_manager_main_1 is defined and not (
-             wazuh_manager_main_1.finished|default(false) or
-             wazuh_manager_main_1.ansible_job_id is not defined)'
+  changed_when: false
+  package:
+    pkg: '{{ wazuh_packages }}'
+    state: 'latest'
+  async: '{{ wazuh_async_timeout }}'
+  poll: '{{ wazuh_async_poll }}'
   tags:
     - 'init'
 
@@ -312,7 +299,7 @@
 - name: 'Linux | Vuls integration deploy (runs in background, can take a while)'
   args:
     creates: '/var/ossec/wodles/vuls/config.toml'
-  async: '{{ wazuh_async_timeout }}'
+  async: 3600
   command: '/var/ossec/wodles/vuls/deploy_vuls.sh
             {{ ansible_distribution|lower }}
             {{ ansible_distribution_major_version|int }}'

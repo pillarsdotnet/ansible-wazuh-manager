@@ -1,13 +1,19 @@
 ---
 
-- name: 'Debian/Ubuntu | Remove Wazuh repository.'
+- name: 'Debian/Ubuntu | Remove java repository.'
   apt_repository:
-    repo: '{{ wazuh_repo }}'
+    repo: '{{ java_repo }}'
     state: 'absent'
-  when: 'wazuh_repo_add and wazuh_repo_remove'
+  when: 'java_repo_add and java_repo_remove'
 
 - name: 'Debian/Ubuntu | Remove Nodejs repository.'
   apt_repository:
     repo: '{{ nodejs_repo }}'
     state: 'absent'
   when: 'nodejs_repo_add and nodejs_repo_remove'
+
+- name: 'Debian/Ubuntu | Remove Wazuh repository.'
+  apt_repository:
+    repo: '{{ wazuh_repo }}'
+    state: 'absent'
+  when: 'wazuh_repo_add and wazuh_repo_remove'

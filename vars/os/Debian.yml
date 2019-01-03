@@ -1,5 +1,9 @@
 ---
 
+java_repo: 'ppa:webupd8team/java'
+
+java_repo_release: 'xenial'
+
 nodejs_repo: 'deb https://deb.nodesource.com/node_6.x
               {{ ansible_distribution_release }} main'
 
