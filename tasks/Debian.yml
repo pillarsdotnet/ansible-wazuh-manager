@@ -48,8 +48,6 @@
         update_cache: true
       async: '{{ wazuh_async_timeout }}'
       poll: '{{ wazuh_async_poll }}'
-      tags:
-        - 'init'
       when: 'java_repo_add'
     - name: 'Debian/Ubuntu | Accept Oracle Java 8 license'
       debconf:
@@ -57,8 +55,6 @@
         question: 'shared/accepted-oracle-license-v1-1'
         value: true
         vtype: 'boolean'
-      tags:
-        - 'init'
     - name: 'Debian/Ubuntu | Oracle Java 8 installer'
       apt:
         name: 'oracle-java8-installer'
@@ -66,8 +62,6 @@
         cache_valid_time: 3600
       async: '{{ wazuh_async_timeout }}'
       poll: '{{ wazuh_async_poll }}'
-      tags:
-        - 'init'
   when:
     - 'wazuh_ciscat_enabled|default(false)'
     - 'wazuh_java_install'
@@ -82,19 +76,13 @@
         cache_valid_time: 3600
       async: '{{ wazuh_async_timeout }}'
       poll: '{{ wazuh_async_poll }}'
-      tags:
-        - 'init'
     - name: 'Debian/Ubuntu | Get OpenScap installed version'
       changed_when: true
       register: 'openscap_version'
       shell: "dpkg-query --showformat='${Version}' --show libopenscap8"
-      tags:
-        - 'config'
     - name: 'Debian/Ubuntu | Check OpenScap version'
       changed_when: true
       register: 'openscap_version_valid'
       shell: 'dpkg --compare-versions "{{ openscap_version.stdout }}"
               ">=" "1.2"; echo $?'
-      tags:
-        - 'config'
   when: 'wazuh_openscap_enabled|default(false)'

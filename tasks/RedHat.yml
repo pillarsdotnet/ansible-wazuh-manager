@@ -23,8 +23,6 @@
     name: 'openscap-scanner'
     state: 'present'
   poll: '{{ wazuh_async_poll }}'
-  tags:
-    - 'init'
   when: 'wazuh_openscap_enabled|default(false)'
 
 - block:
@@ -90,8 +88,6 @@
         - 'oracle_java_task_rpm_download is defined'
         - '"finished" in oracle_java_task_rpm_download'
         - 'oracle_java_task_rpm_download.finished'
-  tags:
-    - 'init'
   when:
     - 'wazuh_ciscat_enabled|default(false)'
     - 'wazuh_java_install'

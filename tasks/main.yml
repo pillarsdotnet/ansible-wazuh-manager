@@ -12,8 +12,6 @@
   loop: '{{ [wazuh_manager.ossec_config|default([])]|flatten }}'
   loop_control:
     loop_var: 'wazuh_ossec_config'
-  tags:
-    - 'init'
 
 - import_tasks: "RedHat.yml"
   when:
@@ -30,8 +28,6 @@
     state: 'latest'
   async: '{{ wazuh_async_timeout }}'
   poll: '{{ wazuh_async_poll }}'
-  tags:
-    - 'init'
 
 - name: 'CentOS/RedHat 6 | Enabling python2.7 and sqlite3'
   replace:
@@ -52,8 +48,6 @@
     get_checksum: false
     get_mime: false
     path: '/var/ossec/etc/client.keys'
-  tags:
-    - 'config'
 
 - name: 'Ensure client.keys exists and is group-writable.'
   file:
@@ -63,8 +57,6 @@
     path: '/var/ossec/etc/client.keys'
     state: '{{  check_keys.stat.exists|ternary("file","touch") }}'
   notify: 'restart wazuh-manager'
-  tags:
-    - 'config'
 
 - name: 'Ensure ossec config dirs are user and group-writable.'
   file:
@@ -86,8 +78,6 @@
      -sha256
      -subj /CN={{ wazuh_manager_fqdn }}/
      -x509
-  tags:
-    - 'config'
   when:
     - 'wazuh_ssl_ca is defined'
     - 'wazuh_ssl_cert is defined'
@@ -102,8 +92,6 @@
     - '{{ wazuh_ssl_ca|default("")|string }}'
     - '{{ wazuh_ssl_cert|default("")|string }}'
     - '{{ wazuh_ssl_key|default("")|string }}'
-  tags:
-    - 'config'
   when:
     - 'item is string'
     - 'item|length>0'
@@ -113,23 +101,17 @@
   register: 'old_authd_service'
   stat:
     path: '/etc/init.d/ossec-authd'
-  tags:
-    - 'config'
 
 - name: 'Verifying for old systemd authd service'
   register: 'old_authd_service'
   stat:
     path: '/lib/systemd/system/ossec-authd.service'
-  tags:
-    - 'config'
 
 - name: 'Ensure ossec-authd service is disabled'
   service:
     name: 'ossec-authd'
     enabled: false
     state: 'stopped'
-  tags:
-    - 'config'
   when: 'old_authd_service.stat.exists'
 
 - name: 'Removing old init authd services'
@@ -139,18 +121,12 @@
   loop:
     - '/etc/init.d/ossec-authd'
     - '/lib/systemd/system/ossec-authd.service'
-  tags:
-    - 'config'
   when: 'old_authd_service.stat.exists'
 
 - name: 'Installing the local_rules.xml file.'
   include_role:
     name: 'xml'
   notify: 'restart wazuh-manager'
-  tags:
-    - 'init'
-    - 'config'
-    - 'rules'
   vars:
     dest: '/var/ossec/etc/rules/local_rules.xml'
     group: 'ossec'
@@ -164,10 +140,6 @@
   include_role:
     name: 'xml'
   notify: 'restart wazuh-manager'
-  tags:
-    - 'init'
-    - 'config'
-    - 'rules'
   vars:
     dest: '/var/ossec/etc/decoders/local_decoder.xml'
     group: 'ossec'
@@ -195,9 +167,6 @@
     name: 'xml'
   loop: '{{ wazuh_shared|dict2items }}'
   notify: 'restart wazuh-manager'
-  tags:
-    - 'init'
-    - 'config'
   vars:
     dest: '/var/ossec/etc/shared/{{ item.key }}/agent.conf'
     group: 'ossec'
@@ -217,8 +186,6 @@
     mode: '0640'
   no_log: true
   notify: 'restart wazuh-manager'
-  tags:
-    - 'config'
   when:
     - 'wazuh_authd_pass is string'
     - 'wazuh_authd_pass|length>0'
@@ -226,9 +193,6 @@
 - name: 'Checking alert log output settings'
   fail:
     msg: 'Please enable jsonout_output or alerts_log in global options.'
-  tags:
-    - 'init'
-    - 'config'
   when:
     - 'not wazuh_alerts_log_enabled|default(true)'
     - 'not wazuh_jsonout_output_enabled|default(false)'
@@ -236,9 +200,6 @@
 - name: 'Configuring the ossec.conf file.'
   include_role:
     name: 'xml'
-  tags:
-    - 'init'
-    - 'config'
   vars:
     dest: '/var/ossec/etc/ossec.conf'
     group: 'ossec'
@@ -257,14 +218,10 @@
   failed_when: false
   register: 'wazuh_process_list'
   command: '/bin/sh -c ". /var/ossec/bin/.process_list ; set | grep _DAEMON="'
-  tags:
-    - 'config'
 
 - name: 'Enable ossec-agentlessd'
   command: '/var/ossec/bin/ossec-control enable agentless'
   notify: 'restart wazuh-manager'
-  tags:
-    - 'config'
   when:
     - '"AGENTLESS_DAEMON=''ossec-agentlessd''" not in wazuh_process_list.stdout'
     - 'wazuh_agentless_enabled|default(false)'
@@ -272,8 +229,6 @@
 - name: 'Enable client-syslog'
   command: '/var/ossec/bin/ossec-control enable client-syslog'
   notify: 'restart wazuh-manager'
-  tags:
-    - 'config'
   when:
     - '"CSYSLOG_DAEMON=''ossec-csyslogd''" not in wazuh_process_list.stdout'
     - 'wazuh_syslog_enabled|default(false)'
@@ -281,8 +236,6 @@
 - name: 'Enable ossec-authd'
   command: '/var/ossec/bin/ossec-control enable auth'
   notify: 'restart wazuh-manager'
-  tags:
-    - 'config'
   when:
     - '"AUTH_DAEMON=''ossec-authd''" not in wazuh_process_list.stdout'
     - 'wazuh_auth_enabled|default(false)'
@@ -290,8 +243,6 @@
 - name: 'Enable ossec-integratord'
   command: '/var/ossec/bin/ossec-control enable integrator'
   notify: 'restart wazuh-manager'
-  tags:
-    - 'config'
   when:
     - '"INTEGRATOR_DAEMON=''ossec-integratord''" not in wazuh_process_list.stdout'
     - 'wazuh_integration_enabled|default(false)'
@@ -304,8 +255,6 @@
             {{ ansible_distribution|lower }}
             {{ ansible_distribution_major_version|int }}'
   poll: 0
-  tags:
-    - 'init'
   when: 'wazuh_vuls_enabled|default(false)'
 
 - name: 'Wazuh-API User'
@@ -318,8 +267,6 @@
     state: 'present'
   loop: '{{ wazuh_api_users|dict2items }}'
   notify: 'restart wazuh-api'
-  tags:
-    - 'config'
   when:
     - 'wazuh_api_install'
     - 'wazuh_api_users is string'
@@ -341,8 +288,6 @@
     - 'wazuh_agentless_enabled|default(false)'
     - 'item.0 is string'
     - 'item.0|length>0'
-  tags:
-    - 'config'
 
 - name: 'Write CDB Lists'
   copy:
@@ -355,8 +300,6 @@
   notify:
     - 'rebuild cdb_lists'
     - 'restart wazuh-manager'
-  tags:
-    - 'config'
   when:
     - 'item.name is defined and item.name is string'
     - 'item.content is defined and item.content is string'
@@ -366,8 +309,6 @@
     name: 'wazuh-manager'
     enabled: true
     state: 'started'
-  tags:
-    - 'config'
 
 - name: 'Ensure Wazuh API service is started and enabled'
   environment:
@@ -376,8 +317,6 @@
     name: 'wazuh-api'
     enabled: true
     state: 'started'
-  tags:
-    - 'config'
   when:
     - 'wazuh_api_install'
     - 'not ( ansible_distribution in ["CentOS","RedHat"]
