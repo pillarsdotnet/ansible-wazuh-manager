@@ -2,10 +2,10 @@
 
 dependencies:
   - name: 'xml'
-    src: 'git+https://github.com/GSA/ansible-xml.git'
+    src: 'git+https://github.com/pillarsdotnet/ansible-xml.git'
 
 galaxy_info:
-  author: 'robert.vincent@gsa.gov'
+  author: 'pillarsdotnet@gmail.com'
   categories:
     - 'monitoring'
   company: 'GSA'
