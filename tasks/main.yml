@@ -13,12 +13,12 @@
   loop_control:
     loop_var: 'wazuh_ossec_config'
 
-- import_tasks: "RedHat.yml"
+- include_tasks: "RedHat.yml"
   when:
     - 'ansible_os_family == "RedHat"'
     - 'ansible_distribution_major_version|int > 5'
 
-- import_tasks: "Debian.yml"
+- include_tasks: "Debian.yml"
   when: 'ansible_os_family == "Debian"'
 
 - name: 'Install wazuh packages'
@@ -323,8 +323,8 @@
          and ansible_distribution_major_version|int < 6 )'
 
 - block:
-    - import_tasks: 'RMRedHat.yml'
+    - include_tasks: 'RMRedHat.yml'
       when: 'ansible_os_family == "RedHat"'
-    - import_tasks: 'RMDebian.yml'
+    - include_tasks: 'RMDebian.yml'
       when: 'ansible_os_family == "Debian"'
   when: 'wazuh_repo_remove'
