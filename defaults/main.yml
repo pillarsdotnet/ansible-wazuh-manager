@@ -1257,6 +1257,8 @@ wazuh_packages_manager:
   - 'expect'
   - 'wazuh-manager'
 
+wazuh_purge: false
+
 wazuh_repo_add: true
 
 wazuh_repo_remove: false

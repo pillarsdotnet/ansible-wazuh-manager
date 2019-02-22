@@ -7,6 +7,26 @@
                      (_{{ ansible_distribution }})?\
                      (_{{ ansible_distribution_major_version }})?.yml"
 
+- name: 'Pre-installation check.'
+  block:
+
+    - name: 'Check whether wazuh-manager is installed.'
+      check_mode: true
+      ignore_errors: true
+      package:
+        name: 'wazuh-manager'
+        state: 'present'
+      register: 'wazuh_manager_package'
+
+    - name: 'Purge /var/ossec directory before installation.'
+      file:
+        path: '/var/ossec'  # TODO: purge packages owning this directory, if any.
+        state: 'absent'
+      when: 'wazuh_manager_package is failed
+          or wazuh_manager_package is changed'
+
+  when: 'wazuh_purge'
+
 - name: 'Check ossec_config settings.'
   include_tasks: 'check_ossec_config.yml'
   loop: '{{ [wazuh_manager.ossec_config|default([])]|flatten }}'

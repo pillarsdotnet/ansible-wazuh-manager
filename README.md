@@ -7,6 +7,7 @@ OS Requirements
 ---------------
 
 This role will work on:
+
  * Red Hat
  * CentOS
  * Fedora
@@ -58,6 +59,11 @@ Role Variables
   * `wazuh_manager_wodle_osquery`: Settings for the [osquery](https://documentation.wazuh.com/current/user-manual/reference/ossec-conf/wodle-osquery.html) module
   * `wazuh_manager_wodle_syscollector`: Settings for the [syscollector](https://documentation.wazuh.com/current/user-manual/reference/ossec-conf/wodle-syscollector.html) module
   * `wazuh_manager_wodle_vuldetector`: Settings for the [vulnerability-detector](https://documentation.wazuh.com/current/user-manual/reference/ossec-conf/wodle-vuln-detector.html) module
+
+* `wazuh_purge`: Completely remove the `/var/ossec` directory before installation. (defaults to `false`).
+* `wazuh_repo_add`: Add the wazuh repo prior to installation.
+* `wazuh_repo_remove`: Remove the wazuh repo after installation.
+
 * `wazuh_shared`: Settings for [centralized configuration](https://documentation.wazuh.com/current/user-manual/reference/centralized-configuration.html)
   * `wazuh_shared_linux`: Centralized settings for linux agents
   * `wazuh_shared_windows`: Centralized settings for windows agents
