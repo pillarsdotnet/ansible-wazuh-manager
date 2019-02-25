@@ -1,9 +1,5 @@
 ---
 
-dependencies:
-  - name: 'xml'
-    src: 'git+https://github.com/pillarsdotnet/ansible-xml.git'
-
 galaxy_info:
   author: 'pillarsdotnet@gmail.com'
   categories:
